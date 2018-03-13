@@ -43,38 +43,50 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class InternalWebServer extends AuthListner implements Runnable, Observer {
+public class InternalWebServer extends AuthListner implements Runnable, Observer
+{
 
 	private ServerSocket socket;
 	private int listenPort;
 	private UUID nonce;
 	public static Thread serverThread;
-	
+
 	// The logger
-    private static Logger logger = LoggerFactory.getLogger(OwaNotifier.class);
-	
-    /**
-     * Build a new instance of InternalWebServer
-     * @param nonce 
-     * 	A string to verify in responses
-     * @throws IOException
-     * 	In case of Exception when starting webserver
-     */
-	public InternalWebServer(UUID nonce) throws IOException {
+	private static Logger logger = LoggerFactory.getLogger(OwaNotifier.class);
+
+	/**
+	 * Build a new instance of InternalWebServer
+	 * 
+	 * @param nonce
+	 *            A string to verify in responses
+	 * @throws IOException
+	 *             In case of Exception when starting webserver
+	 */
+	public InternalWebServer(UUID nonce) throws IOException
+	{
 		this.listenPort = Integer.parseInt(OwaNotifier.getInstance().getProps().getProperty("listenPort", "8080"));
 		this.nonce = nonce;
 		// Search an available port
-		while(this.socket == null) {
-			try {
-				InetAddress[] IP=InetAddress.getAllByName("localhost");
-				if(IP.length < 1) {
+		while (this.socket == null)
+		{
+			try
+			{
+				InetAddress[] IP = InetAddress.getAllByName("localhost");
+				if(IP.length < 1)
+				{
 					throw new IOException("Unable to find localhost ip");
 				}
-				this.socket = new ServerSocket(this.listenPort, 10, IP[0]); // Start, listen on port 8080
+				this.socket = new ServerSocket(this.listenPort, 10, IP[0]); // Start,
+																			// listen
+																			// on
+																			// port
+																			// 8080
 				logger.info("Use listen " + this.socket.getInetAddress().toString() + ":" + this.listenPort);
-				
-			} catch (BindException e){
-				this.listenPort = this.listenPort +1;
+
+			}
+			catch (BindException e)
+			{
+				this.listenPort = this.listenPort + 1;
 				OwaNotifier.getInstance().setProps("listenPort", this.listenPort + "");
 			}
 		}
@@ -85,57 +97,79 @@ public class InternalWebServer extends AuthListner implements Runnable, Observer
 	}
 
 	@Override
-	public void run() {
+	public void run()
+	{
 		List<Socket> sockets = new ArrayList<Socket>();
-		while (this.tokenResponse == null) {
+		while (this.tokenResponse == null)
+		{
 			Socket s;
-			try {
+			try
+			{
 				s = this.socket.accept();
 				sockets.add(s);
-				InternalWebServerTransaction c = new InternalWebServerTransaction(s,this, nonce.toString());
+				InternalWebServerTransaction c = new InternalWebServerTransaction(s, this, nonce.toString());
 				c.addObserver(this);
-			} catch (IOException e) {
-				if(e instanceof SocketException) {
-					// When user obtain a token closing listen socket cause this exception
+			}
+			catch (IOException e)
+			{
+				if(e instanceof SocketException)
+				{
+					// When user obtain a token closing listen socket cause this
+					// exception
 					// In this case this is a normal exception
 					logger.info("Closing listening socket.");
-				} else {
+				}
+				else
+				{
 					logger.error("IOException while accepting client requests", e);
 				}
 				// Close all transcation sockets
-				for(Socket transactionSocket: sockets) {
-					try {
-						if(!transactionSocket.isClosed()) {
+				for (Socket transactionSocket : sockets)
+				{
+					try
+					{
+						if(!transactionSocket.isClosed())
+						{
 							transactionSocket.close();
 						}
-					} catch (IOException e1) {
+					}
+					catch (IOException e1)
+					{
 						logger.error("IOException while closing client requests", e1);
 					}
 				}
 				serverThread.interrupt();
 			}
-        }		
+		}
 		serverThread.interrupt();
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
+	public void update(Observable o, Object arg)
+	{
 		idTokenObj = (IdToken) arg;
 		InternalWebServerTransaction transaction = (InternalWebServerTransaction) o;
-		if (idTokenObj != null) {
+		if(idTokenObj != null)
+		{
 			tokenResponse = AuthHelper.getTokenFromAuthCode(transaction.code, idTokenObj.getTenantId());
-			if(tokenResponse.getError() == null) {
+			if(tokenResponse.getError() == null)
+			{
 				logger.info("User has a valid token");
-				
-				try {
+
+				try
+				{
 					logger.info("Sopping listening thread");
 					this.socket.close();
-				} catch (IOException e) {
+				}
+				catch (IOException e)
+				{
 					logger.error("IOException durring ", e);
 				}
 				this.setChanged();
 				this.notifyObservers(tokenResponse);
-			} else {
+			}
+			else
+			{
 				logger.error(tokenResponse.getError());
 				logger.error(tokenResponse.getErrorDescription());
 				logger.error("User don't have a valid token");
@@ -143,6 +177,6 @@ public class InternalWebServer extends AuthListner implements Runnable, Observer
 				serverThread.interrupt();
 			}
 		}
-		
+
 	}
 }

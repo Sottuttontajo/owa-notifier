@@ -20,7 +20,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package com.notification.types;
+ */
+package com.notification.types;
 
 import java.awt.BorderLayout;
 
@@ -31,11 +32,13 @@ import javax.swing.JProgressBar;
 
 import info.kapable.utils.owanotifier.theme.TextTheme;
 
-public class ProgressBarNotification extends BorderLayoutNotification {
+public class ProgressBarNotification extends BorderLayoutNotification
+{
 	private JLabel m_label;
 	private JProgressBar m_progress;
 
-	public ProgressBarNotification() {
+	public ProgressBarNotification()
+	{
 		m_label = new JLabel();
 		m_progress = new JProgressBar();
 
@@ -53,16 +56,19 @@ public class ProgressBarNotification extends BorderLayoutNotification {
 	 * @param theme
 	 *            the TextTheme to set
 	 */
-	public void setTextTheme(TextTheme theme) {
+	public void setTextTheme(TextTheme theme)
+	{
 		m_label.setFont(theme.title);
 		m_label.setForeground(theme.titleColor);
 	}
 
-	public String getTitle() {
+	public String getTitle()
+	{
 		return m_label.getText();
 	}
 
-	public void setTitle(String title) {
+	public void setTitle(String title)
+	{
 		m_label.setText(title);
 	}
 
@@ -72,14 +78,16 @@ public class ProgressBarNotification extends BorderLayoutNotification {
 	 * @param progress
 	 *            the progress to set
 	 */
-	public void setProgress(int progress) {
+	public void setProgress(int progress)
+	{
 		m_progress.setValue(progress);
 	}
 
 	/**
 	 * @return the progress of the progress bar, from 0 to 100
 	 */
-	public int getProgress() {
+	public int getProgress()
+	{
 		return m_progress.getValue();
 	}
 }

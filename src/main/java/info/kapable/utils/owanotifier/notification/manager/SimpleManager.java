@@ -20,7 +20,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package info.kapable.utils.owanotifier.notification.manager;
+ */
+package info.kapable.utils.owanotifier.notification.manager;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -33,10 +34,12 @@ import info.kapable.utils.owanotifier.utils.Screen;
 import info.kapable.utils.owanotifier.utils.Time;
 
 /**
- * Simply displays new Notifications in one corner of the screen on top of each other. Has an option for fading (note -
- * results will vary across different platforms).
+ * Simply displays new Notifications in one corner of the screen on top of each
+ * other. Has an option for fading (note - results will vary across different
+ * platforms).
  */
-public class SimpleManager extends NotificationManager {
+public class SimpleManager extends NotificationManager
+{
 	private Location m_loc;
 	private Screen m_screen;
 
@@ -54,18 +57,21 @@ public class SimpleManager extends NotificationManager {
 		m_fadeTime = Time.seconds(1);
 	}
 
-	public SimpleManager() {
+	public SimpleManager()
+	{
 		m_loc = Location.NORTHEAST;
 	}
 
-	public SimpleManager(Location loc) {
+	public SimpleManager(Location loc)
+	{
 		m_loc = loc;
 	}
 
 	/**
 	 * @return the time for fading
 	 */
-	public Time getFadeTime() {
+	public Time getFadeTime()
+	{
 		return m_fadeTime;
 	}
 
@@ -75,14 +81,16 @@ public class SimpleManager extends NotificationManager {
 	 * @param fadeTime
 	 *            the duration of the fading
 	 */
-	public void setFadeTime(Time fadeTime) {
+	public void setFadeTime(Time fadeTime)
+	{
 		m_fadeTime = fadeTime;
 	}
 
 	/**
 	 * @return whether or not fading is enabled
 	 */
-	public boolean isFadeEnabled() {
+	public boolean isFadeEnabled()
+	{
 		return m_fadeEnabled;
 	}
 
@@ -92,14 +100,18 @@ public class SimpleManager extends NotificationManager {
 	 * @param fadeEnabled
 	 *            whether or not fading is enabled
 	 */
-	public void setFadeEnabled(boolean fadeEnabled) {
+	public void setFadeEnabled(boolean fadeEnabled)
+	{
 		m_fadeEnabled = fadeEnabled;
 
-		if (fadeEnabled) {
+		if(fadeEnabled)
+		{
 			m_fader = new FaderRunnable();
 			m_faderThread = new Thread(m_fader);
 			m_faderThread.start();
-		} else {
+		}
+		else
+		{
 			m_fader.stop();
 			m_fader = null;
 			m_faderThread = null;
@@ -109,7 +121,8 @@ public class SimpleManager extends NotificationManager {
 	/**
 	 * @return the location where the Notifications show up
 	 */
-	public Location getLocation() {
+	public Location getLocation()
+	{
 		return m_loc;
 	}
 
@@ -119,24 +132,30 @@ public class SimpleManager extends NotificationManager {
 	 * @param loc
 	 *            the Location to show at
 	 */
-	public void setLocation(Location loc) {
+	public void setLocation(Location loc)
+	{
 		m_loc = loc;
 	}
 
-	protected Screen getScreen() {
+	protected Screen getScreen()
+	{
 		return m_screen;
 	}
 
 	@Override
-	protected void notificationAdded(Notification note, Time time) {
+	protected void notificationAdded(Notification note, Time time)
+	{
 		note.setLocation(m_screen.getX(m_loc, note), m_screen.getY(m_loc, note));
 
-		if (isFadeEnabled()) {
+		if(isFadeEnabled())
+		{
 			double opacity = note.getOpacity();
 			note.setOpacity(0);
 			startFade(note, opacity);
 			scheduleRemoval(note, time.add(m_fadeTime));
-		} else {
+		}
+		else
+		{
 			scheduleRemoval(note, time);
 		}
 
@@ -144,65 +163,84 @@ public class SimpleManager extends NotificationManager {
 	}
 
 	@Override
-	protected void notificationRemoved(Notification note) {
-		if (isFadeEnabled()) {
+	protected void notificationRemoved(Notification note)
+	{
+		if(isFadeEnabled())
+		{
 			startFade(note, -note.getOpacity());
-		} else {
+		}
+		else
+		{
 			note.hide();
 		}
 	}
 
-	private void startFade(Notification note, double deltaOpacity) {
+	private void startFade(Notification note, double deltaOpacity)
+	{
 		m_fader.addFader(new Fader(note, getDeltaFade(deltaOpacity), note.getOpacity() + deltaOpacity));
 	}
 
-	private double getDeltaFade(double deltaOpacity) {
+	private double getDeltaFade(double deltaOpacity)
+	{
 		return deltaOpacity / m_fadeTime.getMilliseconds();
 	}
 
-	private class FaderRunnable implements Runnable {
+	private class FaderRunnable implements Runnable
+	{
 		private List<Fader> m_faders;
 		private boolean m_shouldStop;
 
-		public FaderRunnable() {
+		public FaderRunnable()
+		{
 			m_faders = new CopyOnWriteArrayList<Fader>();
 			m_shouldStop = false;
 		}
 
-		public void addFader(Fader fader) {
+		public void addFader(Fader fader)
+		{
 			m_faders.add(fader);
 		}
 
-		public void stop() {
+		public void stop()
+		{
 			m_shouldStop = true;
 		}
 
 		@Override
-		public void run() {
-			while (!m_shouldStop) {
-				for (Fader fader : m_faders) {
+		public void run()
+		{
+			while (!m_shouldStop)
+			{
+				for (Fader fader : m_faders)
+				{
 					fader.updateFade();
-					if (fader.isFinishedFading()) {
+					if(fader.isFinishedFading())
+					{
 						m_faders.remove(fader);
 					}
 				}
-				try {
+				try
+				{
 					Thread.sleep(FADE_DELAY);
-				} catch (InterruptedException e) {
+				}
+				catch (InterruptedException e)
+				{
 					e.printStackTrace();
 				}
 			}
 		}
 	}
 
-	private class Fader {
+	private class Fader
+	{
 		private Notification m_note;
 		private long m_fadeStartTime;
 		private double m_startFade;
 		private double m_stopFade;
 		private double m_deltaFade; // delta fade per millisecond
 
-		public Fader(Notification note, double deltaFade, double stopFade) {
+		public Fader(Notification note, double deltaFade, double stopFade)
+		{
 			m_note = note;
 			m_deltaFade = deltaFade;
 			m_stopFade = stopFade;
@@ -210,18 +248,24 @@ public class SimpleManager extends NotificationManager {
 			m_fadeStartTime = System.currentTimeMillis();
 		}
 
-		public void updateFade() {
+		public void updateFade()
+		{
 			long deltaTime = System.currentTimeMillis() - m_fadeStartTime;
-			if (!isFinishedFading()) {
+			if(!isFinishedFading())
+			{
 				m_note.setOpacity(m_startFade + m_deltaFade * deltaTime);
-			} else {
-				if (m_deltaFade < 0) {
+			}
+			else
+			{
+				if(m_deltaFade < 0)
+				{
 					m_note.hide();
 				}
 			}
 		}
 
-		public boolean isFinishedFading() {
+		public boolean isFinishedFading()
+		{
 			return (m_deltaFade > 0) ? m_note.getOpacity() >= m_stopFade : m_note.getOpacity() <= m_stopFade;
 		}
 	}

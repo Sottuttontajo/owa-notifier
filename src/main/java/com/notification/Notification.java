@@ -20,7 +20,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package com.notification;
+ */
+package com.notification;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -28,11 +29,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Provides the core methods that a Notification needs.
  */
-public abstract class Notification {
+public abstract class Notification
+{
 	private NotificationManager m_manager;
 	private List<NotificationListener> m_listeners;
 
-	public Notification() {
+	public Notification()
+	{
 		m_listeners = new CopyOnWriteArrayList<NotificationListener>();
 	}
 
@@ -42,7 +45,8 @@ public abstract class Notification {
 	 * @param listener
 	 *            the NotificationListener to add
 	 */
-	public void addNotificationListener(NotificationListener listener) {
+	public void addNotificationListener(NotificationListener listener)
+	{
 		m_listeners.add(listener);
 	}
 
@@ -52,38 +56,47 @@ public abstract class Notification {
 	 * @param listener
 	 *            the NotificationListener to remove
 	 */
-	public void removeNotificationListener(NotificationListener listener) {
+	public void removeNotificationListener(NotificationListener listener)
+	{
 		m_listeners.remove(listener);
 	}
 
 	/**
-	 * @return whether or not this Notification has been added to a NotificationManager
+	 * @return whether or not this Notification has been added to a
+	 *         NotificationManager
 	 */
-	public boolean isManaged() {
+	public boolean isManaged()
+	{
 		return m_manager != null;
 	}
 
 	/**
 	 * @return the NotificationManager managing this Notification
 	 */
-	public NotificationManager getNotificationManager() {
+	public NotificationManager getNotificationManager()
+	{
 		return m_manager;
 	}
 
-	protected void setNotificationManager(NotificationManager manager) {
+	protected void setNotificationManager(NotificationManager manager)
+	{
 		m_manager = manager;
 	}
 
 	/**
-	 * Removes the Notification from the Manager. In some cases, this has the same effect as calling hide(); however,
-	 * hide() doesn't invoke Manager-related things like fading, etc.
+	 * Removes the Notification from the Manager. In some cases, this has the
+	 * same effect as calling hide(); however, hide() doesn't invoke
+	 * Manager-related things like fading, etc.
 	 */
-	public void removeFromManager() {
+	public void removeFromManager()
+	{
 		m_manager.removeNotification(this);
 	}
 
-	protected void fireListeners(String action) {
-		for (NotificationListener nl : m_listeners) {
+	protected void fireListeners(String action)
+	{
+		for (NotificationListener nl : m_listeners)
+		{
 			nl.actionCompleted(this, action);
 		}
 	}

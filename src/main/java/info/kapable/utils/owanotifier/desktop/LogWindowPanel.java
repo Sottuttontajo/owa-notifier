@@ -31,28 +31,31 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class LogWindowPanel extends JFrame  {
-    public CheckboxMenuItem displayLogItem;
+public class LogWindowPanel extends JFrame
+{
+	public CheckboxMenuItem displayLogItem;
 
 	/**
 	 * The serial version UID
 	 */
 	private static final long serialVersionUID = 6124731365121421622L;
-	
+
 	/**
 	 * The textArea
 	 */
 	private JTextArea jLogTextArea;
-	
+
 	private static LogWindowPanel instance;
-	
+
 	/**
 	 * Singleton accessory
-	 * @return
-	 * 		The only instance of LogWindowPanel
+	 * 
+	 * @return The only instance of LogWindowPanel
 	 */
-	public static LogWindowPanel getInstance() {
-		if(instance == null) {
+	public static LogWindowPanel getInstance()
+	{
+		if(instance == null)
+		{
 			instance = new LogWindowPanel();
 		}
 		return instance;
@@ -61,29 +64,33 @@ public class LogWindowPanel extends JFrame  {
 	/**
 	 * Constructor
 	 */
-	private LogWindowPanel() {
+	private LogWindowPanel()
+	{
 
-        this.setSize(500, 400);
-        this.setVisible(false);
+		this.setSize(500, 400);
+		this.setVisible(false);
 		jLogTextArea = new JTextArea();
 		TextAreaAppender.setTextArea(jLogTextArea);
-		
-        JPanel thePanel = new JPanel(new BorderLayout());
-        JScrollPane scrollPane = new JScrollPane(jLogTextArea);
-        thePanel.add(scrollPane);
+
+		JPanel thePanel = new JPanel(new BorderLayout());
+		JScrollPane scrollPane = new JScrollPane(jLogTextArea);
+		thePanel.add(scrollPane);
 		this.add(thePanel);
-		
+
 		/*
 		 * On close update notification tray
 		 */
-		this.addWindowListener(new java.awt.event.WindowAdapter() {
+		this.addWindowListener(new java.awt.event.WindowAdapter()
+		{
 			@Override
-		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-				if(displayLogItem != null) {
+			public void windowClosing(java.awt.event.WindowEvent windowEvent)
+			{
+				if(displayLogItem != null)
+				{
 					displayLogItem.setLabel("Afficher les traces");
 					displayLogItem.setState(false);
 				}
-		    }
+			}
 		});
 	}
 }

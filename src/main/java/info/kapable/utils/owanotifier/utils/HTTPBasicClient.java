@@ -20,7 +20,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package info.kapable.utils.owanotifier.utils;
+ */
+package info.kapable.utils.owanotifier.utils;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -33,62 +34,76 @@ import java.net.UnknownHostException;
 /**
  * A basic HTTP client to test auth
  */
-public class HTTPBasicClient extends Thread{
+public class HTTPBasicClient extends Thread
+{
 
 	public String output = "";
 	public String input = "";
 	public String host = "localhost";
 	public int responseCode;
 	public int listenPort = 8080;
-	
+
 	/**
-	 * @param input input to pass on server
-	 * @param host host to listen
-	 * @param listenPort server port
+	 * @param input
+	 *            input to pass on server
+	 * @param host
+	 *            host to listen
+	 * @param listenPort
+	 *            server port
 	 */
-	public HTTPBasicClient(String input, String host, int listenPort) {
+	public HTTPBasicClient(String input, String host, int listenPort)
+	{
 		super();
 		this.input = input;
 		this.listenPort = listenPort;
 		this.host = host;
 	}
-	
+
 	@Override
-	public void run() {
-         try {
-        	try {
+	public void run()
+	{
+		try
+		{
+			try
+			{
 				Thread.sleep(2000);
-			} catch (InterruptedException e) {
+			}
+			catch (InterruptedException e)
+			{
 				e.printStackTrace();
 			}
-        	String url = "http://" + this.host + ":" + this.listenPort + "/";
+			String url = "http://" + this.host + ":" + this.listenPort + "/";
 
-    		URL obj = new URL(url);
-    		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+			URL obj = new URL(url);
+			HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-    		//add reuqest header
-    		con.setRequestMethod("POST");
-    		
-    		// Send post request
-    		con.setDoOutput(true);
-    		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-    		wr.writeBytes(input);
-    		wr.flush();
-    		wr.close();
+			// add reuqest header
+			con.setRequestMethod("POST");
 
-    		BufferedReader in = new BufferedReader(
-    		        new InputStreamReader(con.getInputStream()));
-    		String inputLine;
-    		StringBuffer response = new StringBuffer();
+			// Send post request
+			con.setDoOutput(true);
+			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+			wr.writeBytes(input);
+			wr.flush();
+			wr.close();
 
-    		while ((inputLine = in.readLine()) != null) {
-    			response.append(inputLine);
-    		}
-    		in.close();
-    		this.output = response.toString();
-		} catch (UnknownHostException e) {
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+
+			while ((inputLine = in.readLine()) != null)
+			{
+				response.append(inputLine);
+			}
+			in.close();
+			this.output = response.toString();
+		}
+		catch (UnknownHostException e)
+		{
 			e.printStackTrace();
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 	}

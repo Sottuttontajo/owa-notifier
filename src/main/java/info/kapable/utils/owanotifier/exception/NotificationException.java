@@ -20,12 +20,15 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package info.kapable.utils.owanotifier.exception;
+ */
+package info.kapable.utils.owanotifier.exception;
 
-public class NotificationException extends RuntimeException {
+public class NotificationException extends RuntimeException
+{
 	private static final long serialVersionUID = 1L;
 
-	public NotificationException(String exception) {
+	public NotificationException(String exception)
+	{
 		super(exception);
 	}
 }

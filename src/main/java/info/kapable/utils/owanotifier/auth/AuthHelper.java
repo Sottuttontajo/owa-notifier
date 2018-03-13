@@ -40,16 +40,15 @@ import info.kapable.utils.owanotifier.RestfullAcessProxy;
  * 
  * @author Mathieu GOULIN
  */
-public class AuthHelper {
+public class AuthHelper
+{
 	// link to microsoft login
 	private static final String authority = "https://login.microsoftonline.com";
 	// link to oauth
-	private static final String authorizeUrl = authority
-			+ "/common/oauth2/v2.0/authorize";
+	private static final String authorizeUrl = authority + "/common/oauth2/v2.0/authorize";
 
-	// Scope to request 
-	private static String[] scopes = { "openid", "offline_access", "profile",
-			"User.Read", "Mail.Read" };
+	// Scope to request
+	private static String[] scopes = { "openid", "offline_access", "profile", "User.Read", "Mail.Read" };
 
 	// Param fetch from configuration
 	// AppId and password is need
@@ -58,18 +57,23 @@ public class AuthHelper {
 	private static String redirectUrl = null;
 
 	// The logger
-    private static Logger logger = LoggerFactory.getLogger(AuthHelper.class);
-    
-    /**
-     * Singleton to fetch appId from configuration
-     * @return
-     * 		The applicationID to use
-     */
-	private static String getAppId() {
-		if (appId == null) {
-			try {
+	private static Logger logger = LoggerFactory.getLogger(AuthHelper.class);
+
+	/**
+	 * Singleton to fetch appId from configuration
+	 * 
+	 * @return The applicationID to use
+	 */
+	private static String getAppId()
+	{
+		if(appId == null)
+		{
+			try
+			{
 				appId = OwaNotifier.getInstance().getProps().getProperty("appId");
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				return null;
 			}
 		}
@@ -78,14 +82,19 @@ public class AuthHelper {
 
 	/**
 	 * Singleton to fetch appPassword from configuration
-	 * @return
-	 * 		The application password to use
+	 * 
+	 * @return The application password to use
 	 */
-	private static String getAppPassword() {
-		if (appPassword == null) {
-			try {
+	private static String getAppPassword()
+	{
+		if(appPassword == null)
+		{
+			try
+			{
 				appPassword = OwaNotifier.getInstance().getProps().getProperty("appPassword");
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				return null;
 			}
 		}
@@ -94,22 +103,25 @@ public class AuthHelper {
 
 	/**
 	 * Return the redirect url to pass on microsoft auth
-	 * @return
-	 * 		An url to microsoft auth
+	 * 
+	 * @return An url to microsoft auth
 	 * @throws NumberFormatException
-	 * 		In case of listenPort is not integer in properties
+	 *             In case of listenPort is not integer in properties
 	 * @throws IOException
-	 * 		In case of exception during properties reading
+	 *             In case of exception during properties reading
 	 */
-	private static String getRedirectUrl() throws NumberFormatException,
-			IOException {
-		int listenPort = Integer.parseInt(OwaNotifier.getInstance().getProps().getProperty(
-				"listenPort"));
-		if (redirectUrl == null) {
-			try {
+	private static String getRedirectUrl() throws NumberFormatException, IOException
+	{
+		int listenPort = Integer.parseInt(OwaNotifier.getInstance().getProps().getProperty("listenPort"));
+		if(redirectUrl == null)
+		{
+			try
+			{
 				redirectUrl = OwaNotifier.getInstance().getProps().getProperty("redirectUrl");
 				redirectUrl = redirectUrl.replace("8080", listenPort + "");
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				return null;
 			}
 		}
@@ -118,12 +130,14 @@ public class AuthHelper {
 
 	/**
 	 * Return scopes
-	 * @return
-	 * 		A string contains scopes to request on microsoft 
+	 * 
+	 * @return A string contains scopes to request on microsoft
 	 */
-	private static String getScopes() {
+	private static String getScopes()
+	{
 		StringBuilder sb = new StringBuilder();
-		for (String scope : scopes) {
+		for (String scope : scopes)
+		{
 			sb.append(scope + " ");
 		}
 		return sb.toString().trim();
@@ -131,18 +145,21 @@ public class AuthHelper {
 
 	/**
 	 * Return the login url with all parameters to open in broswer
-	 * @param state a random uuid
-	 * @param nonce a random uuid
-	 * @param listenPort the listen port of returnUrl
-	 * @return
-	 * 		the login url
+	 * 
+	 * @param state
+	 *            a random uuid
+	 * @param nonce
+	 *            a random uuid
+	 * @param listenPort
+	 *            the listen port of returnUrl
+	 * @return the login url
 	 * @throws NumberFormatException
-	 * 		In case of listenPort is not a string in properties
+	 *             In case of listenPort is not a string in properties
 	 * @throws IOException
-	 * 		In case of exception while reading properties
+	 *             In case of exception while reading properties
 	 */
-	public static String getLoginUrl(UUID state, UUID nonce, int listenPort)
-			throws NumberFormatException, IOException {
+	public static String getLoginUrl(UUID state, UUID nonce, int listenPort) throws NumberFormatException, IOException
+	{
 
 		StringBuilder urlBuilder = new StringBuilder(authorizeUrl);
 		urlBuilder.append("?client_id=" + getAppId());
@@ -152,39 +169,41 @@ public class AuthHelper {
 		urlBuilder.append("&state=" + state);
 		urlBuilder.append("&nonce=" + nonce);
 		// Response mode is
-		//urlBuilder.append("&response_mode=" + "form_post");
+		// urlBuilder.append("&response_mode=" + "form_post");
 
 		return urlBuilder.toString();
 	}
 
 	/**
-	 * Request token api to refresh the identification token
-	 * 	When token have expired, we need to refresh token
+	 * Request token api to refresh the identification token When token have
+	 * expired, we need to refresh token
+	 * 
 	 * @param tokens
-	 * 	The initial token object
+	 *            The initial token object
 	 * @param tenantId
-	 * 	The id of daemon instance
-	 * @return
-	 * 	A valid tokenResponse in case of success, an token response with error in case of error
+	 *            The id of daemon instance
+	 * @return A valid tokenResponse in case of success, an token response with
+	 *         error in case of error
 	 */
-	public static TokenResponse getTokenFromRefresh(TokenResponse tokens,
-			String tenantId) {
+	public static TokenResponse getTokenFromRefresh(TokenResponse tokens, String tenantId)
+	{
 		TokenService tokenService = RestfullAcessProxy.getTokenService(authority);
 		logger.info("Request to refresh token");
-		try {
+		try
+		{
 			JacksonConverter c = new JacksonConverter(new ObjectMapper());
-			return (TokenResponse) c.fromBody(
-					tokenService.getAccessTokenFromRefreshToken(tenantId,
-							getAppId(), getAppPassword(), "refresh_token",
-							tokens.getRefreshToken(), getRedirectUrl())
-							.getBody(), TokenResponse.class);
-		} catch (IOException e) {
+			return (TokenResponse) c.fromBody(tokenService.getAccessTokenFromRefreshToken(tenantId, getAppId(), getAppPassword(), "refresh_token", tokens.getRefreshToken(), getRedirectUrl()).getBody(), TokenResponse.class);
+		}
+		catch (IOException e)
+		{
 			TokenResponse error = new TokenResponse();
 			logger.error("IOException in refresh token : ", e);
 			error.setError("IOException");
 			error.setErrorDescription(e.getMessage());
 			return error;
-		} catch (retrofit.RetrofitError e) {
+		}
+		catch (retrofit.RetrofitError e)
+		{
 			TokenResponse error = new TokenResponse();
 			logger.error("API Calling Exeption in refresh token : ", e);
 			error.setError("RetrofitError");
@@ -195,31 +214,33 @@ public class AuthHelper {
 
 	/**
 	 * Initial request to get Token from authentication return
+	 * 
 	 * @param authCode
-	 * 		The authCode getting from mini-webserver
+	 *            The authCode getting from mini-webserver
 	 * @param tenantId
-	 * 		The tenantId getting from mini-webserver
-	 * @return
-	 * 		A valid token response in case of success, a TokenResponse with error in other case
+	 *            The tenantId getting from mini-webserver
+	 * @return A valid token response in case of success, a TokenResponse with
+	 *         error in other case
 	 */
-	public static TokenResponse getTokenFromAuthCode(String authCode,
-			String tenantId) {
+	public static TokenResponse getTokenFromAuthCode(String authCode, String tenantId)
+	{
 		TokenService tokenService = RestfullAcessProxy.getTokenService(authority);
-		
-		try {
+
+		try
+		{
 			JacksonConverter c = new JacksonConverter(new ObjectMapper());
-			return (TokenResponse) c.fromBody(
-					tokenService.getAccessTokenFromAuthCode(tenantId,
-							getAppId(), getAppPassword(), "authorization_code",
-							authCode, getRedirectUrl()).getBody(),
-					TokenResponse.class);
-		} catch (IOException e) {
+			return (TokenResponse) c.fromBody(tokenService.getAccessTokenFromAuthCode(tenantId, getAppId(), getAppPassword(), "authorization_code", authCode, getRedirectUrl()).getBody(), TokenResponse.class);
+		}
+		catch (IOException e)
+		{
 			TokenResponse error = new TokenResponse();
 			logger.error("IOException in getting inital token : ", e);
 			error.setError("IOException");
 			error.setErrorDescription(e.getMessage());
 			return error;
-		} catch (retrofit.RetrofitError e) {
+		}
+		catch (retrofit.RetrofitError e)
+		{
 			TokenResponse error = new TokenResponse();
 			logger.error("API Calling Exeption in getting inital token : ", e);
 			error.setError("RetrofitError");

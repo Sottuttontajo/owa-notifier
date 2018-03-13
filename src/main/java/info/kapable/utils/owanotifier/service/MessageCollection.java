@@ -20,22 +20,26 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package info.kapable.utils.owanotifier.service;
+ */
+package info.kapable.utils.owanotifier.service;
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MessageCollection {
+public class MessageCollection
+{
 
 	List<Message> value;
 
-	public List<Message> getValue() {
+	public List<Message> getValue()
+	{
 		return value;
 	}
 
-	public void setValue(List<Message> value) {
+	public void setValue(List<Message> value)
+	{
 		this.value = value;
 	}
 }

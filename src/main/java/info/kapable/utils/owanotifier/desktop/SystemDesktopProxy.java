@@ -20,7 +20,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package info.kapable.utils.owanotifier.desktop;
+ */
+package info.kapable.utils.owanotifier.desktop;
 
 import java.awt.AWTException;
 import java.awt.CheckboxMenuItem;
@@ -50,7 +51,8 @@ import org.slf4j.LoggerFactory;
 import info.kapable.utils.owanotifier.InboxChangeEvent;
 import info.kapable.utils.owanotifier.OwaNotifier;
 
-public class SystemDesktopProxy extends DesktopProxy {
+public class SystemDesktopProxy extends DesktopProxy
+{
 
 	private TrayIcon trayIcon;
 
@@ -58,17 +60,19 @@ public class SystemDesktopProxy extends DesktopProxy {
 	private Image imageWaiting;
 	private Image imageNewMail;
 	private Image imageNoMail;
-	
+
 	// The logger
-    private static Logger logger = LoggerFactory.getLogger(SystemDesktopProxy.class);
-	
+	private static Logger logger = LoggerFactory.getLogger(SystemDesktopProxy.class);
+
 	/**
 	 * On build load icon.png
 	 */
-	public SystemDesktopProxy() {
+	public SystemDesktopProxy()
+	{
 		super();
 
-		try {
+		try
+		{
 			this.imageWaiting = ImageIO.read(getClass().getClassLoader().getResource("icon-waiting.png"));
 			this.imageNewMail = ImageIO.read(getClass().getClassLoader().getResource("icon.png"));
 			this.imageNoMail = ImageIO.read(getClass().getClassLoader().getResource("icon-no-mail.png"));
@@ -76,39 +80,56 @@ public class SystemDesktopProxy extends DesktopProxy {
 			// Let the system resizes the image if needed
 			trayIcon.setImageAutoSize(true);
 			// Set tooltip text for the tray icon
-			
+
 			this.setToolTip(toolTip);
-			trayIcon.addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent e) {
-					if (e.getClickCount() == 2) {
+			trayIcon.addMouseListener(new MouseAdapter()
+			{
+				public void mouseClicked(MouseEvent e)
+				{
+					if(e.getClickCount() == 2)
+					{
 						Desktop dt = Desktop.getDesktop();
 						URL f;
-						try {
+						try
+						{
 							f = new URL(OwaNotifier.getInstance().getProps().getProperty("owaUrl"));
 							dt.browse(f.toURI());
-						} catch (IOException e1) {
+						}
+						catch (IOException e1)
+						{
 							e1.printStackTrace();
 							logger.error("IOException when calling browse on owaUrl", e1);
-						} catch (URISyntaxException e1) {
+						}
+						catch (URISyntaxException e1)
+						{
 							logger.error("URISyntaxException when calling browse on owaUrl", e1);
 						}
 					}
 				}
 			});
 			trayIcon.setPopupMenu(this.getPopupMenu());
-		} catch (UnsupportedOperationException e) {
+		}
+		catch (UnsupportedOperationException e)
+		{
 			e.printStackTrace();
-		} catch (IOException e) {
+		}
+		catch (IOException e)
+		{
 			e.printStackTrace();
 			OwaNotifier.exit(105);
 		}
 
-		try {
+		try
+		{
 			SystemTray tray = SystemTray.getSystemTray();
 			tray.add(trayIcon);
-		} catch (UnsupportedOperationException e) {
+		}
+		catch (UnsupportedOperationException e)
+		{
 			e.printStackTrace();
-		} catch (AWTException e1) {
+		}
+		catch (AWTException e1)
+		{
 			e1.printStackTrace();
 			OwaNotifier.exit(106);
 		}
@@ -116,34 +137,40 @@ public class SystemDesktopProxy extends DesktopProxy {
 
 	/**
 	 * Update toolTipMessage
+	 * 
 	 * @param toolTipMessage
 	 */
-	private void setToolTip(String toolTipMessage) {
+	private void setToolTip(String toolTipMessage)
+	{
 		this.toolTip = toolTipMessage;
-		if(trayIcon != null) {
+		if(trayIcon != null)
+		{
 			trayIcon.setToolTip(toolTipMessage);
 		}
 	}
-	
+
 	/**
 	 * Return the toolTipMessage
-	 * @return
-	 * 		A string display on tray
+	 * 
+	 * @return A string display on tray
 	 */
-	public String getToolTip() {
+	public String getToolTip()
+	{
 		return this.toolTip;
 	}
 
-	private PopupMenu getPopupMenu() {
+	private PopupMenu getPopupMenu()
+	{
 		final PopupMenu popup = new PopupMenu();
 
 		// Create a pop-up menu components
 		MenuItem aboutItem = new MenuItem("About");
-		aboutItem.addActionListener(new ActionListener() {
+		aboutItem.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Lien: https://github.com/matgou/owa-notifier", "OwaNotifier: ",
-						JOptionPane.INFORMATION_MESSAGE);
+			public void actionPerformed(ActionEvent e)
+			{
+				JOptionPane.showMessageDialog(null, "Lien: https://github.com/matgou/owa-notifier", "OwaNotifier: ", JOptionPane.INFORMATION_MESSAGE);
 
 			}
 
@@ -151,14 +178,19 @@ public class SystemDesktopProxy extends DesktopProxy {
 		// Create a pop-up menu components
 		final CheckboxMenuItem displayLogItem = new CheckboxMenuItem("Afficher les traces");
 		LogWindowPanel.getInstance().displayLogItem = displayLogItem;
-		
-		displayLogItem.addItemListener(new ItemListener() {
+
+		displayLogItem.addItemListener(new ItemListener()
+		{
 			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if(LogWindowPanel.getInstance().isVisible()) {
+			public void itemStateChanged(ItemEvent e)
+			{
+				if(LogWindowPanel.getInstance().isVisible())
+				{
 					LogWindowPanel.getInstance().setVisible(false);
 					displayLogItem.setLabel("Afficher les traces");
-				} else {
+				}
+				else
+				{
 					LogWindowPanel.getInstance().setVisible(true);
 					displayLogItem.setLabel("Masquer les traces");
 				}
@@ -167,21 +199,28 @@ public class SystemDesktopProxy extends DesktopProxy {
 		// Create a pop-up menu components
 		final CheckboxMenuItem muteLogItem = new CheckboxMenuItem("Ne plus afficher de notifications");
 		muteLogItem.setState(OwaNotifier.isMute());
-		muteLogItem.addItemListener(new ItemListener() {
-					@Override
-					public void itemStateChanged(ItemEvent e) {
-						if(e.getStateChange() == ItemEvent.SELECTED) {
-							OwaNotifier.setMute(true);
-						} else {
-							OwaNotifier.setMute(false);
-						}
-					}
-				});
+		muteLogItem.addItemListener(new ItemListener()
+		{
+			@Override
+			public void itemStateChanged(ItemEvent e)
+			{
+				if(e.getStateChange() == ItemEvent.SELECTED)
+				{
+					OwaNotifier.setMute(true);
+				}
+				else
+				{
+					OwaNotifier.setMute(false);
+				}
+			}
+		});
 		MenuItem exitItem = new MenuItem("Exit");
-		exitItem.addActionListener(new ActionListener() {
+		exitItem.addActionListener(new ActionListener()
+		{
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				logger.error("Exit Perform");
 				OwaNotifier.exit(0);
 			}
@@ -197,24 +236,35 @@ public class SystemDesktopProxy extends DesktopProxy {
 	}
 
 	@Override
-	protected void processEvent(InboxChangeEvent event) throws IOException {
+	protected void processEvent(InboxChangeEvent event) throws IOException
+	{
 		// TODO Auto-generated method stub
-		if (SystemTray.isSupported()) {
-			if(event.getUnreadItemCount() > 0) {
+		if(SystemTray.isSupported())
+		{
+			if(event.getUnreadItemCount() > 0)
+			{
 				trayIcon.setImage(this.imageNewMail);
-			} else {
+			}
+			else
+			{
 				trayIcon.setImage(this.imageNoMail);
 			}
 
-			if(OwaNotifier.getInstance().getProps().getProperty("notification.type").contentEquals("system")) {
+			if(OwaNotifier.getInstance().getProps().getProperty("notification.type").contentEquals("system"))
+			{
 				trayIcon.displayMessage(event.getEventTitle(), event.getEventText(), MessageType.INFO);
 			}
-		} else {
+		}
+		else
+		{
 			logger.error("System tray not supported!");
 		}
-		if(event.getUnreadItemCount() > 0) {
+		if(event.getUnreadItemCount() > 0)
+		{
 			this.setToolTip(event.getUnreadItemCount() + " message(s) non lu");
-		} else {
+		}
+		else
+		{
 			this.setToolTip("Pas de message non lu");
 		}
 	}

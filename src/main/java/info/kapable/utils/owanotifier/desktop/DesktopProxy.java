@@ -37,24 +37,26 @@ import org.slf4j.LoggerFactory;
 import info.kapable.utils.owanotifier.InboxChangeEvent;
 import info.kapable.utils.owanotifier.OwaNotifier;
 
-public abstract class DesktopProxy implements Observer {
+public abstract class DesktopProxy implements Observer
+{
 
 	// The logger
-    private static Logger logger = LoggerFactory.getLogger(DesktopProxy.class);
-	
-	public DesktopProxy() {
+	private static Logger logger = LoggerFactory.getLogger(DesktopProxy.class);
+
+	public DesktopProxy()
+	{
 	}
 
 	/**
-	 * This function is call web event is throw 
-	 * Display notification on destop
+	 * This function is call web event is throw Display notification on destop
+	 * 
 	 * @param event
-	 * 			The event to display
+	 *            The event to display
 	 * @throws IOException
-	 * 		In case of exception during event processing
+	 *             In case of exception during event processing
 	 */
 	protected abstract void processEvent(InboxChangeEvent event) throws IOException;
-	
+
 	/**
 	 * Static method to start browser redirect user to url
 	 * 
@@ -63,33 +65,47 @@ public abstract class DesktopProxy implements Observer {
 	 * @throws MalformedURLException
 	 *             in case of url is not an url
 	 */
-	public static void browse(String url) throws MalformedURLException {
+	public static void browse(String url) throws MalformedURLException
+	{
 		// Start browser
-		if (Desktop.isDesktopSupported()) {
+		if(Desktop.isDesktopSupported())
+		{
 			Desktop dt = Desktop.getDesktop();
-			if (dt.isSupported(Desktop.Action.BROWSE)) {
+			if(dt.isSupported(Desktop.Action.BROWSE))
+			{
 				URL f = new URL(url);
-				try {
+				try
+				{
 					dt.browse(f.toURI());
-				} catch (IOException e) {
+				}
+				catch (IOException e)
+				{
 					e.printStackTrace();
-				} catch (URISyntaxException e) {
+				}
+				catch (URISyntaxException e)
+				{
 					e.printStackTrace();
 				}
 			}
-		} else {
+		}
+		else
+		{
 			// browser is unsuported
 			logger.error("Desktop is unsuported");
 			OwaNotifier.exit(1);
 		}
 	}
-	
+
 	@Override
-	public void update(Observable o, Object arg) {
+	public void update(Observable o, Object arg)
+	{
 		InboxChangeEvent event = (InboxChangeEvent) arg;
-		try {
+		try
+		{
 			this.processEvent(event);
-		} catch (IOException e1) {
+		}
+		catch (IOException e1)
+		{
 			e1.printStackTrace();
 			OwaNotifier.exit(255);
 		}

@@ -20,7 +20,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package com.notification;
+ */
+package com.notification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,20 +30,24 @@ import java.util.TimerTask;
 import info.kapable.utils.owanotifier.utils.Time;
 
 /**
- * Manages the creation and movement of Notifications. Once a Notification is added, all aspects of it except for click
- * handeling are managed by the NotificationManager. This includes things such as showing and hiding.
+ * Manages the creation and movement of Notifications. Once a Notification is
+ * added, all aspects of it except for click handeling are managed by the
+ * NotificationManager. This includes things such as showing and hiding.
  */
-public abstract class NotificationManager {
+public abstract class NotificationManager
+{
 	private List<Notification> m_notifications;
 
-	public NotificationManager() {
+	public NotificationManager()
+	{
 		m_notifications = new ArrayList<Notification>();
 	}
 
 	/**
 	 * @return all the Notifications being managed by the NotificationManager
 	 */
-	public final List<Notification> getNotifications() {
+	public final List<Notification> getNotifications()
+	{
 		return m_notifications;
 	}
 
@@ -52,11 +57,14 @@ public abstract class NotificationManager {
 	 * @param note
 	 *            the Notification to be added
 	 * @param time
-	 *            the amount of time the Notification should display (e.g., Time.seconds(1) will make the Notification
-	 *            display for one second).
+	 *            the amount of time the Notification should display (e.g.,
+	 *            Time.seconds(1) will make the Notification display for one
+	 *            second).
 	 */
-	public final void addNotification(Notification note, Time time) {
-		if (!m_notifications.contains(note)) {
+	public final void addNotification(Notification note, Time time)
+	{
+		if(!m_notifications.contains(note))
+		{
 			note.setNotificationManager(this);
 			m_notifications.add(note);
 			notificationAdded(note, time);
@@ -69,8 +77,10 @@ public abstract class NotificationManager {
 	 * @param note
 	 *            the Notification to be removed
 	 */
-	public final void removeNotification(Notification note) {
-		if (m_notifications.contains(note)) {
+	public final void removeNotification(Notification note)
+	{
+		if(m_notifications.contains(note))
+		{
 			m_notifications.remove(note);
 			notificationRemoved(note);
 			note.setNotificationManager(null);
@@ -81,22 +91,27 @@ public abstract class NotificationManager {
 
 	protected abstract void notificationRemoved(Notification note);
 
-	protected void scheduleRemoval(Notification note, Time time) {
-		if (!time.isInfinite()) {
+	protected void scheduleRemoval(Notification note, Time time)
+	{
+		if(!time.isInfinite())
+		{
 			java.util.Timer removeTimer = new java.util.Timer();
 			removeTimer.schedule(new RemoveTask(note), time.getMilliseconds());
 		}
 	}
 
-	private class RemoveTask extends TimerTask {
+	private class RemoveTask extends TimerTask
+	{
 		private Notification m_note;
 
-		public RemoveTask(Notification note) {
+		public RemoveTask(Notification note)
+		{
 			m_note = note;
 		}
 
 		@Override
-		public void run() {
+		public void run()
+		{
 			NotificationManager.this.removeNotification(m_note);
 		}
 	}

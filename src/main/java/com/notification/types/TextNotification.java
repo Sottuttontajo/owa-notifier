@@ -20,7 +20,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package com.notification.types;
+ */
+package com.notification.types;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -40,70 +41,79 @@ import info.kapable.utils.owanotifier.theme.WindowTheme;
 /**
  * A text notification which will display a title and a subtitle.
  */
-public class TextNotification extends BorderLayoutNotification {
+public class TextNotification extends BorderLayoutNotification
+{
 	protected JLabel m_titleLabel;
 	protected JTextArea m_subtitleArea;
 	protected JLabel m_fromLabel;
 	private TextTheme m_textTheme;
 
-	public void addActionListener(MouseListener l) {
+	public void addActionListener(MouseListener l)
+	{
 		this.m_titleLabel.addMouseListener(l);
 		this.m_subtitleArea.addMouseListener(l);
 	}
-	
-	public TextNotification() {
+
+	public TextNotification()
+	{
 		m_fromLabel = new JLabel();
 		m_titleLabel = new JLabel();
 		m_titleLabel.addMouseListener(new NotificationMouseAdapter(m_titleLabel));
-		
+
 		m_subtitleArea = new JTextArea();
 		m_subtitleArea.addMouseListener(new NotificationMouseAdapter(m_titleLabel));
-		
+
 		JPanel panelHeader = new JPanel();
 		panelHeader.setLayout(new BoxLayout(panelHeader, BoxLayout.PAGE_AXIS));
 		JButton dimissButton = new JButton();
 		dimissButton.setText("X");
 		final TextNotification me = this;
-		dimissButton.addActionListener(new ActionListener() {
+		dimissButton.addActionListener(new ActionListener()
+		{
 
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0)
+			{
 				// TODO Auto-generated method stub
 				me.removeFromManager();
 			}
-			
+
 		});
 		dimissButton.setOpaque(false);
 		dimissButton.setContentAreaFilled(false);
 		dimissButton.setBorderPainted(false);
 		dimissButton.setBounds((int) (this.getWidth() - dimissButton.getPreferredSize().getWidth()), 0, (int) dimissButton.getPreferredSize().getWidth(), (int) dimissButton.getPreferredSize().getHeight());
 		m_panel.add(dimissButton);
-		
-		
+
 		panelHeader.add(m_fromLabel);
 		panelHeader.add(m_titleLabel);
 		this.addComponent(panelHeader, BorderLayout.NORTH);
 		this.addComponent(m_subtitleArea, BorderLayout.CENTER);
 	}
 
-	public String getTitle() {
+	public String getTitle()
+	{
 		return m_titleLabel.getText();
 	}
 
-	public void setTitle(String title) {
-		//m_titleLabel.setText("<html><u>" + title + "</u></html>");
+	public void setTitle(String title)
+	{
+		// m_titleLabel.setText("<html><u>" + title + "</u></html>");
 		m_titleLabel.setText(title);
 	}
 
-	public String getSubtitle() {
+	public String getSubtitle()
+	{
 		return m_subtitleArea.getText();
 	}
 
-	public void setSubtitle(String subtitle) {
+	public void setSubtitle(String subtitle)
+	{
 		m_subtitleArea.setText(subtitle);
 	}
 
-	protected TextTheme getTextTheme() {
+	protected TextTheme getTextTheme()
+	{
 		return m_textTheme;
 	}
 
@@ -111,7 +121,8 @@ public class TextNotification extends BorderLayoutNotification {
 	 * @param theme
 	 *            the two Fonts that should be used.
 	 */
-	public void setTextTheme(TextTheme theme) {
+	public void setTextTheme(TextTheme theme)
+	{
 		m_textTheme = theme;
 		m_titleLabel.setFont(theme.title);
 		m_subtitleArea.setFont(theme.subtitle);
@@ -122,24 +133,31 @@ public class TextNotification extends BorderLayoutNotification {
 	}
 
 	@Override
-	public void setWindowTheme(WindowTheme theme) {
+	public void setWindowTheme(WindowTheme theme)
+	{
 		super.setWindowTheme(theme);
 
-		if (m_textTheme != null) {
+		if(m_textTheme != null)
+		{
 			m_titleLabel.setForeground(m_textTheme.titleColor);
 			m_subtitleArea.setForeground(m_textTheme.subtitleColor);
 		}
 	}
 
-	public void setFrom(String string) {
-		if(string == null) {
+	public void setFrom(String string)
+	{
+		if(string == null)
+		{
 			m_fromLabel.setVisible(false);
-		} else {
+		}
+		else
+		{
 			m_fromLabel.setText(string);
 		}
 	}
 
-	public String getFrom() {
+	public String getFrom()
+	{
 		return m_fromLabel.getText();
 	}
 }

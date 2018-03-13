@@ -23,13 +23,15 @@ SOFTWARE.
  */
 package info.kapable.utils.owanotifier.utils;
 
-public class MathUtils {
+public class MathUtils
+{
 	/**
 	 * @param number
 	 *            the number to find the sign of
 	 * @return the sign of the number
 	 */
-	public static int sign(double number) {
+	public static int sign(double number)
+	{
 		return (int) Math.signum(number);
 	}
 
@@ -44,10 +46,11 @@ public class MathUtils {
 	 *            the maximum value
 	 * @return the clamped number between min and max
 	 */
-	public static double clamp(double num, double min, double max) {
-		if (num < min)
+	public static double clamp(double num, double min, double max)
+	{
+		if(num < min)
 			return min;
-		if (num > max)
+		if(num > max)
 			return max;
 		return num;
 	}

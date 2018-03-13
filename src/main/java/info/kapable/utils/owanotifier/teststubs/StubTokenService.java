@@ -20,7 +20,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package info.kapable.utils.owanotifier.teststubs;
+ */
+package info.kapable.utils.owanotifier.teststubs;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,7 +33,8 @@ import retrofit.client.Header;
 import retrofit.client.Response;
 import retrofit.mime.TypedString;
 
-public class StubTokenService implements TokenService {
+public class StubTokenService implements TokenService
+{
 
 	public String url = "https://login.microsoftonline.com/1eea9cbe-243a-40b9-ba20-dc28db3933ba/oauth2/v2.0/token";
 	public int status = 200;
@@ -41,32 +43,34 @@ public class StubTokenService implements TokenService {
 	public String body;
 	private static StubTokenService stubTokenService;
 	public boolean retrofitError = false;
-	
+
 	/**
 	 * Singleton
-	 * @return
-	 * 		The singleton object
+	 * 
+	 * @return The singleton object
 	 */
-	public static StubTokenService getStubTokenService() {
-		if(stubTokenService == null) {
+	public static StubTokenService getStubTokenService()
+	{
+		if(stubTokenService == null)
+		{
 			stubTokenService = new StubTokenService();
 		}
 		return stubTokenService;
 	}
-	
+
 	/**
 	 * Constructor
 	 */
-	private StubTokenService() {
+	private StubTokenService()
+	{
 		this.headers = new ArrayList<Header>();
 	}
 
-
 	@Override
-	public Response getAccessTokenFromAuthCode(String tenantId,
-			String clientId, String clientSecret, String grantType,
-			String code, String redirectUrl) {
-		if(retrofitError) {
+	public Response getAccessTokenFromAuthCode(String tenantId, String clientId, String clientSecret, String grantType, String code, String redirectUrl)
+	{
+		if(retrofitError)
+		{
 			IOException e = new IOException("JUnit Stub");
 			throw RetrofitError.networkError(url, e);
 		}
@@ -74,11 +78,11 @@ public class StubTokenService implements TokenService {
 	}
 
 	@Override
-	public Response getAccessTokenFromRefreshToken(String tenantId,
-			String clientId, String clientSecret, String grantType,
-			String code, String redirectUrl) {
+	public Response getAccessTokenFromRefreshToken(String tenantId, String clientId, String clientSecret, String grantType, String code, String redirectUrl)
+	{
 
-		if(retrofitError) {
+		if(retrofitError)
+		{
 			IOException e = new IOException("JUnit Stub");
 			throw RetrofitError.networkError(url, e);
 		}

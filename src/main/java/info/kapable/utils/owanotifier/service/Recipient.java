@@ -20,20 +20,23 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package info.kapable.utils.owanotifier.service;
-
+ */
+package info.kapable.utils.owanotifier.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Recipient {
-  private EmailAddress emailAddress;
+public class Recipient
+{
+	private EmailAddress emailAddress;
 
-  public EmailAddress getEmailAddress() {
-    return emailAddress;
-  }
+	public EmailAddress getEmailAddress()
+	{
+		return emailAddress;
+	}
 
-  public void setEmailAddress(EmailAddress emailAddress) {
-    this.emailAddress = emailAddress;
-  }
+	public void setEmailAddress(EmailAddress emailAddress)
+	{
+		this.emailAddress = emailAddress;
+	}
 }

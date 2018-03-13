@@ -20,7 +20,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package info.kapable.utils.owanotifier.theme;
+ */
+package info.kapable.utils.owanotifier.theme;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,16 +29,18 @@ import java.util.Map;
 /**
  * Contains a collection of themes that can be accessed later.
  */
-public class ThemePackage {
+public class ThemePackage
+{
 	private Map<Class<?>, Object> m_themes;
 
-	public ThemePackage() {
+	public ThemePackage()
+	{
 		m_themes = new HashMap<Class<?>, Object>();
 	}
 
 	/**
-	 * Sets the theme object related with the theme class. The first parameter should be the class of the second
-	 * parameter.
+	 * Sets the theme object related with the theme class. The first parameter
+	 * should be the class of the second parameter.
 	 *
 	 * @param <T>
 	 *            the Class of the theme
@@ -46,7 +49,8 @@ public class ThemePackage {
 	 * @param theme
 	 *            the theme to set
 	 */
-	public <T> void setTheme(Class<T> themeClass, T theme) {
+	public <T> void setTheme(Class<T> themeClass, T theme)
+	{
 		m_themes.put(themeClass, theme);
 	}
 
@@ -59,7 +63,8 @@ public class ThemePackage {
 	 *            the Class of the theme to return
 	 * @return the theme corresponding with the given Class
 	 */
-	public <T> T getTheme(Class<T> themeClass) {
+	public <T> T getTheme(Class<T> themeClass)
+	{
 		@SuppressWarnings("unchecked")
 		T theme = (T) m_themes.get(themeClass);
 		return theme;

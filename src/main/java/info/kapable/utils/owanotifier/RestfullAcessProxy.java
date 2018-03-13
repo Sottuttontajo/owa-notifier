@@ -20,7 +20,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package info.kapable.utils.owanotifier;
+ */
+package info.kapable.utils.owanotifier;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -50,110 +51,127 @@ import retrofit.client.OkClient;
  * 
  * @author Mathieu GOULIN
  */
-public class RestfullAcessProxy {
+public class RestfullAcessProxy
+{
 	// The logger
-    private static Logger logger = LoggerFactory.getLogger(RestfullAcessProxy.class);
-    
-    // On jUnit context don't present rest api but return stub
-    public static boolean stubMode = false;
+	private static Logger logger = LoggerFactory.getLogger(RestfullAcessProxy.class);
 
-    /**
-     * Return a instance of tokenService to call it
-     * 
-     * @param authority
-     * 		The url to login
-     * @return TokenService 
-     * 		return a proxy to call api
-     */
-	public static TokenService getTokenService(String authority) {
-		if(!stubMode) {
+	// On jUnit context don't present rest api but return stub
+	public static boolean stubMode = false;
+
+	/**
+	 * Return a instance of tokenService to call it
+	 * 
+	 * @param authority
+	 *            The url to login
+	 * @return TokenService return a proxy to call api
+	 */
+	public static TokenService getTokenService(String authority)
+	{
+		if(!stubMode)
+		{
 			return getRealTokenService(authority);
-		} else {
+		}
+		else
+		{
 			logger.debug("Use stub as TokenService");
 			return getStubTokenService();
 		}
 	}
-	
+
 	/**
 	 * On jUnit context return a stub to simulate rest TokenService
 	 * 
-	 * @return TokenService
-	 * 		The service to use to call api
+	 * @return TokenService The service to use to call api
 	 */
-	private static TokenService getStubTokenService() {
+	private static TokenService getStubTokenService()
+	{
 		return StubTokenService.getStubTokenService();
 	}
-	
+
 	/**
 	 * Return a proxy if exist
-	 * @return
-	 * 	null if no proxy, the InetSocketAddress else of proxy
+	 * 
+	 * @return null if no proxy, the InetSocketAddress else of proxy
 	 */
-	public static InetSocketAddress findProxy() {
+	public static InetSocketAddress findProxy()
+	{
 		logger.info("detecting proxies");
 		ProxySearch ps = ProxySearch.getDefaultProxySearch();
-		ProxySelector myProxySelector = ps.getProxySelector(); 
+		ProxySelector myProxySelector = ps.getProxySelector();
 		ProxySelector.setDefault(myProxySelector);
 
-
 		List<Proxy> l = null;
-		if(myProxySelector == null) {
-        	logger.info("No Proxy");
+		if(myProxySelector == null)
+		{
+			logger.info("No Proxy");
 			return null;
 		}
-		try {
+		try
+		{
 			l = myProxySelector.select(new URI("https://graph.microsoft.com"));
-		}  
-		catch (URISyntaxException e) {
-		    e.printStackTrace();
 		}
-		if (l != null) {
-		    for (Iterator<Proxy> iter = l.iterator(); iter.hasNext();) {
-		        java.net.Proxy proxy = (java.net.Proxy) iter.next();
-		        logger.info("proxy type: " + proxy.type());
+		catch (URISyntaxException e)
+		{
+			e.printStackTrace();
+		}
+		if(l != null)
+		{
+			for (Iterator<Proxy> iter = l.iterator(); iter.hasNext();)
+			{
+				java.net.Proxy proxy = (java.net.Proxy) iter.next();
+				logger.info("proxy type: " + proxy.type());
 
-		        InetSocketAddress addr = (InetSocketAddress) proxy.address();
-		        if (addr == null) {
-		        	logger.info("No Proxy");
-		            return null;
-		        } 
-		        logger.info("Hostname: " + addr.getHostName());
-		        logger.info("Port : " + addr.getPort());
-		        return addr;
-		    }
+				InetSocketAddress addr = (InetSocketAddress) proxy.address();
+				if(addr == null)
+				{
+					logger.info("No Proxy");
+					return null;
+				}
+				logger.info("Hostname: " + addr.getHostName());
+				logger.info("Port : " + addr.getPort());
+				return addr;
+			}
 		}
-    	logger.info("No Proxy");
+		logger.info("No Proxy");
 		return null;
 	}
-	
-	public static OutlookService getRealOutlookService(String accessTokenSource, String userEmailSource) {
+
+	public static OutlookService getRealOutlookService(String accessTokenSource, String userEmailSource)
+	{
 		// Create a request interceptor to add headers that belong on
 		// every request
 		final String userEmail = userEmailSource;
 		final String accessToken = accessTokenSource;
-		RequestInterceptor requestInterceptor = new RequestInterceptor() {
+		RequestInterceptor requestInterceptor = new RequestInterceptor()
+		{
 			@Override
-			public void intercept(RequestFacade request) {
+			public void intercept(RequestFacade request)
+			{
 				request.addHeader("User-Agent", "owa-notifier-daemon");
 				request.addHeader("client-request-id", UUID.randomUUID().toString());
 				request.addHeader("return-client-request-id", "true");
 				request.addHeader("Authorization", String.format("Bearer %s", accessToken));
-				request.addHeader("Accept","application/json");
+				request.addHeader("Accept", "application/json");
 
-				if (userEmail != null && !userEmail.isEmpty()) {
+				if(userEmail != null && !userEmail.isEmpty())
+				{
 					request.addHeader("X-AnchorMailbox", userEmail);
 				}
 			}
 		};
-		
+
 		OkHttpClient client = new OkHttpClient();
 		InetSocketAddress p = findProxy();
-		if(p != null) {
-			client.setProxy(new Proxy(Proxy.Type.HTTP,p));
-		} else { 
-			client.setProxy(Proxy.NO_PROXY); 
+		if(p != null)
+		{
+			client.setProxy(new Proxy(Proxy.Type.HTTP, p));
 		}
-		
+		else
+		{
+			client.setProxy(Proxy.NO_PROXY);
+		}
+
 		// Create and configure the Retrofit object
 		RestAdapter restAdapter = new RestAdapter.Builder()
 				// Retrofit retrofit = new Retrofit.Builder()
@@ -162,9 +180,11 @@ public class RestfullAcessProxy {
 				 * .client(client)
 				 * .addConverterFactory(JacksonConverterFactory.create())
 				 */
-				.setRequestInterceptor(requestInterceptor).setLogLevel(LogLevel.FULL).setLog(new RestAdapter.Log() {
+				.setRequestInterceptor(requestInterceptor).setLogLevel(LogLevel.FULL).setLog(new RestAdapter.Log()
+				{
 					@Override
-					public void log(String msg) {
+					public void log(String msg)
+					{
 						logger.debug(msg);
 					}
 				}).setClient(new OkClient(client)).build();
@@ -172,46 +192,52 @@ public class RestfullAcessProxy {
 		// Generate the token service
 		return restAdapter.create(OutlookService.class);
 	}
-	
+
 	/**
 	 * Return a instance of tokenService to call it
 	 * 
 	 * @param authority
 	 * @return TokenService return a proxy to call api
 	 */
-	private static TokenService getRealTokenService(String authority) {
+	private static TokenService getRealTokenService(String authority)
+	{
 		// Create a logging interceptor to log request and responses
 		OkHttpClient client = new OkHttpClient();
 		InetSocketAddress p = findProxy();
-		if(p != null) {
-			client.setProxy(new Proxy(Proxy.Type.HTTP,p));
-		} else { 
-			client.setProxy(Proxy.NO_PROXY); 
+		if(p != null)
+		{
+			client.setProxy(new Proxy(Proxy.Type.HTTP, p));
+		}
+		else
+		{
+			client.setProxy(Proxy.NO_PROXY);
 		}
 		// Create and configure the Retrofit object
-		RestAdapter retrofit = new RestAdapter.Builder().setEndpoint(authority)
-				.setLogLevel(LogLevel.FULL).setLog(new RestAdapter.Log() {
-					@Override
-					public void log(String msg) {
-						logger.debug(msg);
-					}
-				}).setClient(new OkClient(client)).build();
+		RestAdapter retrofit = new RestAdapter.Builder().setEndpoint(authority).setLogLevel(LogLevel.FULL).setLog(new RestAdapter.Log()
+		{
+			@Override
+			public void log(String msg)
+			{
+				logger.debug(msg);
+			}
+		}).setClient(new OkClient(client)).build();
 
 		// Generate the token service
 		return retrofit.create(TokenService.class);
 	}
 
 	/**
-	 * Return current context OutlookService 
+	 * Return current context OutlookService
+	 * 
 	 * @param accessTokenSource
-	 * 		The access token
+	 *            The access token
 	 * @param userEmailSource
-	 * 		The user email if know
-	 * @return
-	 * 		an instance of outlook service
+	 *            The user email if know
+	 * @return an instance of outlook service
 	 */
-	public static OutlookService getOutlookService(String accessTokenSource, String userEmailSource) {
-		return getRealOutlookService(accessTokenSource,userEmailSource);
+	public static OutlookService getOutlookService(String accessTokenSource, String userEmailSource)
+	{
+		return getRealOutlookService(accessTokenSource, userEmailSource);
 	}
 
 }

@@ -30,136 +30,163 @@ import info.kapable.utils.owanotifier.service.Message;
 /**
  * This class store all informations to display notification
  */
-public class InboxChangeEvent {
+public class InboxChangeEvent
+{
 	// Different type of event
 	public static final int TYPE_MANY_NEW_MSG = 0;
 	public static final int TYPE_ONE_NEW_MSG = 2;
 	public static final int TYPE_LESS_NEW_MSG = 3;
-	
+
 	// The folder
 	private Folder inbox;
 	// The type of event
-	private int eventType=TYPE_MANY_NEW_MSG;
+	private int eventType = TYPE_MANY_NEW_MSG;
 	// Event data
 	private Message message;
-	
+
 	/**
 	 * Create a new event with only text
+	 * 
 	 * @param inbox
-	 * 		  The inbox object associated to event
+	 *            The inbox object associated to event
 	 * @param eventType
-	 * 		  The type of event object associated to event
+	 *            The type of event object associated to event
 	 */
-	public InboxChangeEvent(Folder inbox, int eventType) {
+	public InboxChangeEvent(Folder inbox, int eventType)
+	{
 		this.inbox = inbox;
 		this.eventType = eventType;
 	}
-	
+
 	/**
 	 * Create a new event with a new message
+	 * 
 	 * @param inbox
-	 * 		  The inbox object associated to event
+	 *            The inbox object associated to event
 	 * @param message
-	 * 		  The message object associated to event
+	 *            The message object associated to event
 	 */
-	public InboxChangeEvent(Folder inbox, Message message) {
+	public InboxChangeEvent(Folder inbox, Message message)
+	{
 		this(inbox, TYPE_ONE_NEW_MSG);
 		this.message = message;
 	}
 
 	/**
 	 * Return the title of new event depending of eventType
-	 * @return
-	 * 		The title of Event to display
+	 * 
+	 * @return The title of Event to display
 	 */
-	public String getEventTitle() {
-		if(this.eventType == TYPE_MANY_NEW_MSG) {
+	public String getEventTitle()
+	{
+		if(this.eventType == TYPE_MANY_NEW_MSG)
+		{
 			return "Nouveaux Messages";
 		}
-		if(this.eventType == TYPE_ONE_NEW_MSG) {
+		if(this.eventType == TYPE_ONE_NEW_MSG)
+		{
 			return this.message.getSubject();
 		}
-		if(this.eventType == TYPE_LESS_NEW_MSG) {
-			if(this.getUnreadItemCount() > 0) {
+		if(this.eventType == TYPE_LESS_NEW_MSG)
+		{
+			if(this.getUnreadItemCount() > 0)
+			{
 				return this.getUnreadItemCount() + " message(s) non lu";
-			} else {
+			}
+			else
+			{
 				return "Pas de message non lu";
 			}
 		}
 		return "";
 	}
 
-
 	/**
 	 * Return inbox associated to event
-	 * @return
-	 * 		  The inbox object associated to event
+	 * 
+	 * @return The inbox object associated to event
 	 */
-	public Folder getInbox() {
+	public Folder getInbox()
+	{
 		return inbox;
 	}
 
 	/**
 	 * Set inbox on event
+	 * 
 	 * @param inbox
-	 * 		  The inbox object associated to event
+	 *            The inbox object associated to event
 	 */
-	public void setInbox(Folder inbox) {
+	public void setInbox(Folder inbox)
+	{
 		this.inbox = inbox;
 	}
-	
+
 	/**
 	 * Return mail message
-	 * @return
-	 * 	the mail message
+	 * 
+	 * @return the mail message
 	 */
-	public Message getMessage() {
+	public Message getMessage()
+	{
 		return message;
 	}
 
 	/**
 	 * Update mail message
+	 * 
 	 * @param message
-	 * 	the mail message
+	 *            the mail message
 	 */
-	public void setMessage(Message message) {
+	public void setMessage(Message message)
+	{
 		this.message = message;
 	}
-	
+
 	/**
 	 * Return the event type
-	 * @return
-	 * 		integer to identify event type
+	 * 
+	 * @return integer to identify event type
 	 */
-	public int getEventType() {
+	public int getEventType()
+	{
 		return eventType;
 	}
 
 	/**
 	 * Set the event type
+	 * 
 	 * @param eventType
-	 * 	the event type
+	 *            the event type
 	 */
-	public void setEventType(int eventType) {
+	public void setEventType(int eventType)
+	{
 		this.eventType = eventType;
 	}
 
 	/**
 	 * Return the text associated to event
-	 * @return
-	 * 		the text
+	 * 
+	 * @return the text
 	 */
-	public String getEventText() {
-		if(this.eventType == TYPE_MANY_NEW_MSG) {
+	public String getEventText()
+	{
+		if(this.eventType == TYPE_MANY_NEW_MSG)
+		{
 			return this.getUnreadItemCount() + " message(s) non lu";
 		}
-		if(this.eventType == TYPE_ONE_NEW_MSG) {
+		if(this.eventType == TYPE_ONE_NEW_MSG)
+		{
 			return this.message.getBodyPreview();
 		}
-		if(this.eventType == TYPE_LESS_NEW_MSG) {
-			if(this.getUnreadItemCount() > 0) {
+		if(this.eventType == TYPE_LESS_NEW_MSG)
+		{
+			if(this.getUnreadItemCount() > 0)
+			{
 				return this.getUnreadItemCount() + " message(s) non lu";
-			} else {
+			}
+			else
+			{
 				return "Pas de message non lu";
 			}
 		}
@@ -168,11 +195,13 @@ public class InboxChangeEvent {
 
 	/**
 	 * Get from field
-	 * @return
-	 * 		a string to identify from of mail
+	 * 
+	 * @return a string to identify from of mail
 	 */
-	public String getEventFrom() {
-		if(message != null) {
+	public String getEventFrom()
+	{
+		if(message != null)
+		{
 			EmailAddress addr = message.getFrom().getEmailAddress();
 			return addr.getName() + " <" + addr.getAddress() + ">";
 		}
@@ -181,10 +210,11 @@ public class InboxChangeEvent {
 
 	/**
 	 * Return the unread message count
-	 * @return
-	 * 		return the unread message count 
+	 * 
+	 * @return return the unread message count
 	 */
-	public int getUnreadItemCount() {
+	public int getUnreadItemCount()
+	{
 		return inbox.getUnreadItemCount();
 	}
 }

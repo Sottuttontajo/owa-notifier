@@ -20,16 +20,20 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package info.kapable.utils.owanotifier.theme;
+ */
+package info.kapable.utils.owanotifier.theme;
 
 import java.awt.Color;
 import java.awt.Font;
 
-public class ThemePackagePresets {
-	private ThemePackagePresets() {
+public class ThemePackagePresets
+{
+	private ThemePackagePresets()
+	{
 	}
 
-	public static ThemePackage cleanLight() {
+	public static ThemePackage cleanLight()
+	{
 		ThemePackage pack = new ThemePackage();
 
 		WindowTheme window = new WindowTheme();
@@ -53,7 +57,8 @@ public class ThemePackagePresets {
 		return pack;
 	}
 
-	public static ThemePackage cleanDark() {
+	public static ThemePackage cleanDark()
+	{
 		ThemePackage pack = new ThemePackage();
 
 		WindowTheme window = new WindowTheme();
@@ -75,7 +80,8 @@ public class ThemePackagePresets {
 		return pack;
 	}
 
-	public static ThemePackage aqua() {
+	public static ThemePackage aqua()
+	{
 		ThemePackage pack = new ThemePackage();
 
 		WindowTheme window = new WindowTheme();

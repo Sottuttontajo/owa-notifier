@@ -20,7 +20,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package info.kapable.utils.owanotifier.desktop.action;
+ */
+package info.kapable.utils.owanotifier.desktop.action;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -30,29 +31,38 @@ import javax.swing.JLabel;
 
 import info.kapable.utils.owanotifier.desktop.DesktopProxy;
 
-public class NotificationMouseAdapter extends MouseAdapter {
+public class NotificationMouseAdapter extends MouseAdapter
+{
 
 	JLabel labelToUnderLine;
-    public NotificationMouseAdapter(JLabel labelToUnderLine) {
+
+	public NotificationMouseAdapter(JLabel labelToUnderLine)
+	{
 		this.labelToUnderLine = labelToUnderLine;
 	}
 
 	@Override
-    public void mouseEntered(MouseEvent e) {
+	public void mouseEntered(MouseEvent e)
+	{
 		labelToUnderLine.setText("<html><u>" + labelToUnderLine.getText() + "</u></html>");
-    }
-	
+	}
+
 	@Override
-    public void mouseExited(MouseEvent e) {
-		labelToUnderLine.setText(labelToUnderLine.getText().replace("<html><u>","").replace("</u></html>", ""));
-    }
-	
+	public void mouseExited(MouseEvent e)
+	{
+		labelToUnderLine.setText(labelToUnderLine.getText().replace("<html><u>", "").replace("</u></html>", ""));
+	}
+
 	@Override
-    public void mouseClicked(MouseEvent e) {
-        try {
+	public void mouseClicked(MouseEvent e)
+	{
+		try
+		{
 			DesktopProxy.browse("https://outlook.office.com/owa/");
-		} catch (MalformedURLException e1) {
+		}
+		catch (MalformedURLException e1)
+		{
 			e1.printStackTrace();
 		}
-    }
+	}
 }

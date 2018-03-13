@@ -20,7 +20,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package com.notification.types;
+ */
+package com.notification.types;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -33,12 +34,14 @@ import info.kapable.utils.owanotifier.theme.WindowTheme;
 /**
  * Lays out Swing Components in a BorderLayout.
  */
-public class BorderLayoutNotification extends WindowNotification {
+public class BorderLayoutNotification extends WindowNotification
+{
 	protected JPanel m_panel;
 
 	public static final int PANEL_PADDING = 10;
 
-	public BorderLayoutNotification() {
+	public BorderLayoutNotification()
+	{
 		super();
 
 		m_panel = new JPanel(new BorderLayout());
@@ -54,11 +57,13 @@ public class BorderLayoutNotification extends WindowNotification {
 	 * @param borderLayout
 	 *            the BorderLayout String, e.g. BorderLayout.NORTH
 	 */
-	public void addComponent(Component comp, String borderLayout) {
+	public void addComponent(Component comp, String borderLayout)
+	{
 		m_panel.add(comp, borderLayout);
 
 		WindowTheme theme = this.getWindowTheme();
-		if (theme != null) {
+		if(theme != null)
+		{
 			comp.setBackground(theme.background);
 			comp.setForeground(theme.foreground);
 		}
@@ -72,7 +77,8 @@ public class BorderLayoutNotification extends WindowNotification {
 	 * @param comp
 	 *            the Component to remove
 	 */
-	public void removeComponent(Component comp) {
+	public void removeComponent(Component comp)
+	{
 		m_panel.remove(comp);
 
 		getWindow().validate();

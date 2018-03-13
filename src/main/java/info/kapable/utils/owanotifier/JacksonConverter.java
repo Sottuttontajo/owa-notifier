@@ -39,51 +39,58 @@ import retrofit.mime.TypedInput;
  * Converter to transform retrofit TypedInput to java Object
  */
 @SuppressWarnings("rawtypes")
-public class JacksonConverter implements Converter {
+public class JacksonConverter implements Converter
+{
 	// the objectMapper field
-    private final ObjectMapper objectMapper;
+	private final ObjectMapper objectMapper;
 
-    /**
-     * Update the objectMapper field
-     * @param objectMapper
-     * 	The new object Mapper
-     */
-    public JacksonConverter(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+	/**
+	 * Update the objectMapper field
+	 * 
+	 * @param objectMapper
+	 *            The new object Mapper
+	 */
+	public JacksonConverter(ObjectMapper objectMapper)
+	{
+		this.objectMapper = objectMapper;
+	}
 
-    /**
-     * Use objectMapper to convert TypedInput to object of specific class
-     * @param body
-     * 	The serialized object
-     * @param type
-     * 	Type of object to return
-     * @return
-     * 	An unserialized java object
-     * @throws JsonParseException
-     * 	In case of Exception durring parsing
-     * @throws JsonMappingException
-     * 	In case of body is not correct Json
-     * @throws IOException
-     * 	In case of IOException
-     */
-    public Object fromBody(TypedInput body, Type type) throws JsonParseException, JsonMappingException, IOException {
-        JavaType javaType = objectMapper.getTypeFactory().constructType(type);
-        return objectMapper.readValue(body.in(), javaType);
-    }
+	/**
+	 * Use objectMapper to convert TypedInput to object of specific class
+	 * 
+	 * @param body
+	 *            The serialized object
+	 * @param type
+	 *            Type of object to return
+	 * @return An unserialized java object
+	 * @throws JsonParseException
+	 *             In case of Exception durring parsing
+	 * @throws JsonMappingException
+	 *             In case of body is not correct Json
+	 * @throws IOException
+	 *             In case of IOException
+	 */
+	public Object fromBody(TypedInput body, Type type) throws JsonParseException, JsonMappingException, IOException
+	{
+		JavaType javaType = objectMapper.getTypeFactory().constructType(type);
+		return objectMapper.readValue(body.in(), javaType);
+	}
 
 	@Override
-	public Object convert(Object arg0) {
+	public Object convert(Object arg0)
+	{
 		throw new UnsupportedOperationException("Not implemented");
 	}
 
 	@Override
-	public JavaType getInputType(TypeFactory arg0) {
+	public JavaType getInputType(TypeFactory arg0)
+	{
 		throw new UnsupportedOperationException("Not implemented");
 	}
 
 	@Override
-	public JavaType getOutputType(TypeFactory arg0) {
+	public JavaType getOutputType(TypeFactory arg0)
+	{
 		throw new UnsupportedOperationException("Not implemented");
 	}
 }

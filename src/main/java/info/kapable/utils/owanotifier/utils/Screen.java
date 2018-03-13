@@ -20,7 +20,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package info.kapable.utils.owanotifier.utils;
+ */
+package info.kapable.utils.owanotifier.utils;
 
 import java.awt.Dimension;
 import java.awt.GraphicsDevice;
@@ -30,7 +31,8 @@ import java.awt.Toolkit;
 import com.notification.Notification;
 import com.notification.NotificationFactory.Location;
 
-public class Screen {
+public class Screen
+{
 	private int m_width;
 	private int m_height;
 
@@ -44,42 +46,52 @@ public class Screen {
 
 	private int m_padding;
 
-	private Screen(boolean spanMultipleMonitors, int padding) {
+	private Screen(boolean spanMultipleMonitors, int padding)
+	{
 		m_padding = padding;
 		setupDimensions(spanMultipleMonitors);
 		calculatePositions();
 	}
 
-	public static Screen standard() {
+	public static Screen standard()
+	{
 		return new Screen(true, 80);
 	}
 
-	public static Screen withSpan(boolean spanMultipleMonitors) {
+	public static Screen withSpan(boolean spanMultipleMonitors)
+	{
 		return new Screen(spanMultipleMonitors, 80);
 	}
 
-	public static Screen withPadding(int padding) {
+	public static Screen withPadding(int padding)
+	{
 		return new Screen(true, padding);
 	}
 
-	public static Screen withSpanAndPadding(boolean spanMultipleMonitors, int padding) {
+	public static Screen withSpanAndPadding(boolean spanMultipleMonitors, int padding)
+	{
 		return new Screen(spanMultipleMonitors, padding);
 	}
 
-	private void setupDimensions(boolean spanMultipleMonitors) {
-		if (spanMultipleMonitors) {
+	private void setupDimensions(boolean spanMultipleMonitors)
+	{
+		if(spanMultipleMonitors)
+		{
 			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 			m_width = screenSize.width;
 			m_height = screenSize.height;
 
-		} else {
+		}
+		else
+		{
 			GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 			m_width = gd.getDisplayMode().getWidth();
 			m_height = gd.getDisplayMode().getHeight();
 		}
 	}
 
-	private void calculatePositions() {
+	private void calculatePositions()
+	{
 		m_leftX = m_padding;
 		m_centerX = (int) (m_width / 2d);
 		m_rightX = m_width - m_padding;
@@ -89,8 +101,10 @@ public class Screen {
 		m_bottomY = m_height - m_padding;
 	}
 
-	public int getX(Location loc, Notification note) {
-		switch (loc) {
+	public int getX(Location loc, Notification note)
+	{
+		switch (loc)
+		{
 		case SOUTHWEST:
 			return m_leftX;
 		case WEST:
@@ -112,8 +126,10 @@ public class Screen {
 		}
 	}
 
-	public int getY(Location loc, Notification note) {
-		switch (loc) {
+	public int getY(Location loc, Notification note)
+	{
+		switch (loc)
+		{
 		case SOUTHWEST:
 			return m_bottomY - note.getHeight();
 		case WEST:
@@ -135,7 +151,8 @@ public class Screen {
 		}
 	}
 
-	public int getPadding() {
+	public int getPadding()
+	{
 		return m_padding;
 	}
 }

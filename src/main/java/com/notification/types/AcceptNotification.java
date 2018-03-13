@@ -20,7 +20,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package com.notification.types;
+ */
+package com.notification.types;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -34,29 +35,36 @@ import info.kapable.utils.owanotifier.theme.TextTheme;
 import info.kapable.utils.owanotifier.theme.WindowTheme;
 
 /**
- * This is a Notification that will ask the user to accept of decline a certain action.
+ * This is a Notification that will ask the user to accept of decline a certain
+ * action.
  */
-public class AcceptNotification extends TextNotification {
+public class AcceptNotification extends TextNotification
+{
 	private JButton m_accept;
 	private JButton m_decline;
 
 	private boolean m_accepted;
 
-	public AcceptNotification() {
+	public AcceptNotification()
+	{
 		m_accept = new JButton("Accept");
 		m_decline = new JButton("Decline");
 		m_accepted = false;
 
-		m_accept.addActionListener(new ActionListener() {
+		m_accept.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				m_accepted = true;
 				removeFromManager();
 			}
 		});
-		m_decline.addActionListener(new ActionListener() {
+		m_decline.addActionListener(new ActionListener()
+		{
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e)
+			{
 				m_accepted = false;
 				removeFromManager();
 			}
@@ -71,16 +79,21 @@ public class AcceptNotification extends TextNotification {
 	}
 
 	/**
-	 * Will wait for the user to click a button (if the Notification hides, this method will act as if the user clicked
-	 * deny).
+	 * Will wait for the user to click a button (if the Notification hides, this
+	 * method will act as if the user clicked deny).
 	 *
 	 * @return the user's response
 	 */
-	public boolean blockUntilReply() {
-		synchronized (this) {
-			try {
+	public boolean blockUntilReply()
+	{
+		synchronized (this)
+		{
+			try
+			{
 				wait();
-			} catch (InterruptedException e) {
+			}
+			catch (InterruptedException e)
+			{
 			}
 		}
 		return m_accepted;
@@ -92,7 +105,8 @@ public class AcceptNotification extends TextNotification {
 	 * @param d
 	 *            sets the dimensions of the accept and decline buttons
 	 */
-	public void setButtonDimensions(Dimension d) {
+	public void setButtonDimensions(Dimension d)
+	{
 		m_accept.setPreferredSize(d);
 		m_decline.setPreferredSize(d);
 	}
@@ -100,7 +114,8 @@ public class AcceptNotification extends TextNotification {
 	/**
 	 * @return the text on the accept button
 	 */
-	public String getAcceptText() {
+	public String getAcceptText()
+	{
 		return m_accept.getText();
 	}
 
@@ -110,14 +125,16 @@ public class AcceptNotification extends TextNotification {
 	 * @param acceptText
 	 *            the text on the accept button
 	 */
-	public void setAcceptText(String acceptText) {
+	public void setAcceptText(String acceptText)
+	{
 		m_accept.setText(acceptText);
 	}
 
 	/**
 	 * @return the text on the decline button
 	 */
-	public String getDeclineText() {
+	public String getDeclineText()
+	{
 		return m_decline.getText();
 	}
 
@@ -127,21 +144,25 @@ public class AcceptNotification extends TextNotification {
 	 * @param declineText
 	 *            the text on the decline button
 	 */
-	public void setDeclineText(String declineText) {
+	public void setDeclineText(String declineText)
+	{
 		m_decline.setText(declineText);
 	}
 
 	@Override
-	public void hide() {
+	public void hide()
+	{
 		super.hide();
 
-		synchronized (this) {
+		synchronized (this)
+		{
 			this.notifyAll();
 		}
 	}
 
 	@Override
-	public void setTextTheme(TextTheme theme) {
+	public void setTextTheme(TextTheme theme)
+	{
 		super.setTextTheme(theme);
 
 		m_accept.setForeground(theme.subtitleColor);
@@ -149,10 +170,12 @@ public class AcceptNotification extends TextNotification {
 	}
 
 	@Override
-	public void setWindowTheme(WindowTheme theme) {
+	public void setWindowTheme(WindowTheme theme)
+	{
 		super.setWindowTheme(theme);
 
-		if (getTextTheme() != null) {
+		if(getTextTheme() != null)
+		{
 			m_accept.setForeground(getTextTheme().subtitleColor);
 			m_decline.setForeground(getTextTheme().subtitleColor);
 		}

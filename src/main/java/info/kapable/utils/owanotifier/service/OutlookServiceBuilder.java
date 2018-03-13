@@ -20,7 +20,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package info.kapable.utils.owanotifier.service;
+ */
+package info.kapable.utils.owanotifier.service;
 
 import info.kapable.utils.owanotifier.RestfullAcessProxy;
 
@@ -29,19 +30,21 @@ import java.io.IOException;
 /**
  * A builder to create OutlookService
  */
-public class OutlookServiceBuilder {
+public class OutlookServiceBuilder
+{
 	/**
 	 * Build an OutlookService
+	 * 
 	 * @param accessTokenSource
-	 * 	accessToken to authenticate of API
+	 *            accessToken to authenticate of API
 	 * @param userEmailSource
-	 * 	If possible the userEmail
-	 * @return
-	 * 	an outlookService Instance
+	 *            If possible the userEmail
+	 * @return an outlookService Instance
 	 * @throws IOException
-	 * 	in case of IOException
+	 *             in case of IOException
 	 */
-	public static OutlookService getOutlookService(String accessTokenSource, String userEmailSource) throws IOException {
+	public static OutlookService getOutlookService(String accessTokenSource, String userEmailSource) throws IOException
+	{
 		return RestfullAcessProxy.getOutlookService(accessTokenSource, userEmailSource);
 	}
 }
