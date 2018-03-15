@@ -67,22 +67,32 @@ public class SwingDesktopProxy extends DesktopProxy
 		SimpleManager fade = new SimpleManager(Location.SOUTHEAST);
 		NotificationFactory factory = new NotificationFactory(ThemePackagePresets.cleanLight());
 
+		IconNotification oldNotification = notification;
 		// The notification window :
 		if(event.getEventType() == InboxChangeEvent.TYPE_ONE_NEW_MSG)
 			notification = factory.buildIconNotification("De: " + event.getEventFrom(), event.getEventTitle(), event.getEventText(), new ImageIcon(this.icon.getScaledInstance(50, 50, Image.SCALE_DEFAULT)));
 		else if(event.getEventType() == InboxChangeEvent.TYPE_MANY_NEW_MSG)
 			notification = factory.buildIconNotification(null, event.getEventTitle(), event.getEventText(), new ImageIcon(this.icon.getScaledInstance(50, 50, Image.SCALE_DEFAULT)));
+		else if(event.getEventType() == InboxChangeEvent.TYPE_LESS_NEW_MSG && event.getUnreadItemCount() > 0)
+			notification = factory.buildIconNotification(null, event.getEventTitle(), event.getEventText(), new ImageIcon(this.icon.getScaledInstance(50, 50, Image.SCALE_DEFAULT)));
+		else if(notification != null && notification.isShown() && event.getUnreadItemCount() == 0)
+		{
+			notification.hide();
+			return;
+		}
 		else
 			return;
-		
+
 		// Display it :
 		try
 		{
 			Properties properties = OwaNotifier.getInstance().getProps();
 			String disappearAfterFadeTimeString = properties.getProperty("disappear_after_fade_time");
 			boolean disappearAfterFadeTime = Boolean.parseBoolean(disappearAfterFadeTimeString);
-			Time time = disappearAfterFadeTime? Time.seconds(Integer.parseInt(properties.getProperty("notification.fade_time"))) : Time.infinite();
+			Time time = disappearAfterFadeTime ? Time.seconds(Integer.parseInt(properties.getProperty("notification.fade_time"))) : Time.infinite();
 			fade.addNotification(notification, time);
+			if(oldNotification != null)
+				oldNotification.hide();
 		}
 		catch (NumberFormatException e)
 		{
