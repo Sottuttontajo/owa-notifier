@@ -50,7 +50,7 @@ public class SwingDesktopProxy extends DesktopProxy
 	{
 		try
 		{
-			this.icon = ImageIO.read(getClass().getClassLoader().getResource("icon.png"));
+			this.icon = ImageIO.read(getClass().getClassLoader().getResource("assets/image/icon.png"));
 		}
 		catch (IOException e)
 		{
@@ -78,7 +78,7 @@ public class SwingDesktopProxy extends DesktopProxy
 			notification = factory.buildIconNotification(null, event.getEventTitle(), event.getEventText(), new ImageIcon(this.icon.getScaledInstance(50, 50, Image.SCALE_DEFAULT)));
 		else if(notification != null && notification.isShown() && event.getInbox().getUnreadItemCount() == 0)
 		{
-			notification.hide();
+			notification.removeFromManager();
 			return;
 		}
 		else
@@ -93,7 +93,7 @@ public class SwingDesktopProxy extends DesktopProxy
 			Time time = disappearAfterFadeTime ? Time.seconds(Integer.parseInt(properties.getProperty("notification.fade_time"))) : Time.infinite();
 			fade.addNotification(notification, time);
 			if(oldNotification != null)
-				oldNotification.hide();
+				oldNotification.removeFromManager();
 		}
 		catch (NumberFormatException e)
 		{

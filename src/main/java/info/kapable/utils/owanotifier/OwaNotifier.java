@@ -97,7 +97,7 @@ public class OwaNotifier extends Observable implements Observer
 	 */
 	private static void loadConfig() throws IOException
 	{
-		String authConfigFile = "auth.properties";
+		String authConfigFile = "property/auth.properties";
 		InputStream authConfigStream = AuthHelper.class.getClassLoader().getResourceAsStream(authConfigFile);
 
 		if(authConfigStream != null)

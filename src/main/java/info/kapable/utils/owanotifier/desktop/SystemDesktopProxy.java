@@ -73,9 +73,9 @@ public class SystemDesktopProxy extends DesktopProxy
 
 		try
 		{
-			this.imageWaiting = ImageIO.read(getClass().getClassLoader().getResource("icon-waiting.png"));
-			this.imageNewMail = ImageIO.read(getClass().getClassLoader().getResource("icon.png"));
-			this.imageNoMail = ImageIO.read(getClass().getClassLoader().getResource("icon-no-mail.png"));
+			this.imageWaiting = ImageIO.read(getClass().getClassLoader().getResource("assets/image/icon-waiting.png"));
+			this.imageNewMail = ImageIO.read(getClass().getClassLoader().getResource("assets/image/icon.png"));
+			this.imageNoMail = ImageIO.read(getClass().getClassLoader().getResource("assets/image/icon-no-mail.png"));
 			trayIcon = new TrayIcon(imageWaiting, "Emails");
 			// Let the system resizes the image if needed
 			trayIcon.setImageAutoSize(true);

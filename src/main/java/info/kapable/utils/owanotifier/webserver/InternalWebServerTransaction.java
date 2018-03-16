@@ -152,7 +152,7 @@ public class InternalWebServerTransaction extends Observable implements Runnable
 				out.write("HTTP/1.1 200 OK\r\n");
 				out.write("Content-Type: text/html\r\n");
 				out.write("\r\n");
-				out.write(readFileAsString("getParamsAndRedirect.html"));
+				out.write(readFileAsString("assets/html/getParamsAndRedirect.html"));
 				out.flush();
 				out.close();
 
@@ -169,11 +169,11 @@ public class InternalWebServerTransaction extends Observable implements Runnable
 
 			if(closeWindow.contentEquals("false"))
 			{
-				out.write(this.readFileAsString("redirectOwa.html"));
+				out.write(this.readFileAsString("assets/html/redirectOwa.html"));
 			}
 			else
 			{
-				out.write(this.readFileAsString("closeWindow.html"));
+				out.write(this.readFileAsString("assets/html/closeWindow.html"));
 			}
 
 			// do not in.close();

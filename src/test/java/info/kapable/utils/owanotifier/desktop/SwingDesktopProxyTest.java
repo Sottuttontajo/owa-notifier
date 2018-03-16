@@ -60,7 +60,6 @@ public class SwingDesktopProxyTest extends TestCase
 		}
 		assertTrue(s.getNotification().getTitle().contains("Nouveaux Messages"));
 		assertTrue(s.getNotification().getSubtitle().contains("1 message(s) non lu"));
-		s.setNotification(null);
 	}
 
 	@Test
