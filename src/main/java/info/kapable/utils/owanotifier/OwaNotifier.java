@@ -23,6 +23,24 @@ SOFTWARE.
  */
 package info.kapable.utils.owanotifier;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.text.NumberFormat;
+import java.util.Calendar;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.UUID;
+import java.util.prefs.Preferences;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import info.kapable.utils.owanotifier.auth.AuthHelper;
 import info.kapable.utils.owanotifier.auth.AuthListner;
 import info.kapable.utils.owanotifier.auth.IdToken;
@@ -33,33 +51,13 @@ import info.kapable.utils.owanotifier.desktop.SwingDesktopProxy;
 import info.kapable.utils.owanotifier.desktop.SystemDesktopProxy;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
+import info.kapable.utils.owanotifier.resource.AuthProperties;
 import info.kapable.utils.owanotifier.service.Folder;
 import info.kapable.utils.owanotifier.service.Message;
 import info.kapable.utils.owanotifier.service.MessageCollection;
 import info.kapable.utils.owanotifier.service.OutlookService;
 import info.kapable.utils.owanotifier.service.OutlookServiceBuilder;
 import info.kapable.utils.owanotifier.webserver.InternalWebServer;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.text.NumberFormat;
-import java.util.Calendar;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Properties;
-import java.util.UUID;
-import java.util.prefs.Preferences;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * OwaNotifier main class - Load config - start oauth2 client daemon - main loop
@@ -75,9 +73,6 @@ public class OwaNotifier extends Observable implements Observer
 	// the return code for exit
 	private static int rc;
 
-	// props contains application configuration
-	public static Properties props;
-
 	// A public object to store auth
 	public TokenResponse tokenResponse;
 	private IdToken idToken;
@@ -89,37 +84,6 @@ public class OwaNotifier extends Observable implements Observer
 
 	// variable to store mute status
 	private static boolean mute;
-
-	/**
-	 * Load config from properties in ressource
-	 * 
-	 * @throws IOException
-	 */
-	private static void loadConfig() throws IOException
-	{
-		String authConfigFile = "property/auth.properties";
-		InputStream authConfigStream = AuthHelper.class.getClassLoader().getResourceAsStream(authConfigFile);
-
-		if(authConfigStream != null)
-		{
-			props = new Properties();
-			props.load(authConfigStream);
-		}
-		else
-		{
-			throw new FileNotFoundException("Property file '" + authConfigFile + "' not found in the classpath.");
-		}
-		Preferences p = Preferences.userRoot();
-		int OwaNotifierMute = p.getInt("OwaNotifierMute", 0);
-		if(OwaNotifierMute > 0)
-		{
-			setMute(true);
-		}
-		else
-		{
-			setMute(false);
-		}
-	}
 
 	/**
 	 * Update mute status in Java/Prefs, this state is saving and restoring at
@@ -154,41 +118,6 @@ public class OwaNotifier extends Observable implements Observer
 	}
 
 	/**
-	 * return properties
-	 * 
-	 * @return Return application properties
-	 * @throws IOException
-	 *             In case of exception during loading properties
-	 */
-	public Properties getProps() throws IOException
-	{
-		if(OwaNotifier.props == null)
-		{
-			loadConfig();
-		}
-		return OwaNotifier.props;
-	}
-
-	/**
-	 * Update a property
-	 * 
-	 * @param key
-	 *            String to identify property in store
-	 * @param value
-	 *            The value to store
-	 * @throws IOException
-	 *             In case of error when storing in properties
-	 */
-	public void setProps(String key, String value) throws IOException
-	{
-		this.getProps();
-		if(value != null)
-			OwaNotifier.props.put(key, value);
-		else
-			OwaNotifier.props.remove(key);
-	}
-
-	/**
 	 * Exit application with code
 	 * 
 	 * @param rc
@@ -218,8 +147,14 @@ public class OwaNotifier extends Observable implements Observer
 	 */
 	public static void main(String[] args) throws IOException
 	{
+		Preferences p = Preferences.userRoot();
+		int owaNotifierMute = p.getInt("OwaNotifierMute", 0);
+		if(owaNotifierMute > 0)
+			setMute(true);
+		else
+			setMute(false);
+
 		owanotifier = getInstance();
-		loadConfig();
 		LogWindowPanel.getInstance();
 		// Check if lock exist
 		String tmp = System.getProperty("java.io.tmpdir");
@@ -230,7 +165,7 @@ public class OwaNotifier extends Observable implements Observer
 			logger.info("Lock modified time : " + lm);
 			logger.info("System current time : " + System.currentTimeMillis());
 			// If lock is not update
-			int loopWaitTime = Integer.parseInt(owanotifier.getProps().getProperty("loopWaitTime"));
+			int loopWaitTime = Integer.parseInt(AuthProperties.getProperty("loopWaitTime"));
 			if((System.currentTimeMillis() - lm) < (loopWaitTime * 2))
 			{
 				logger.info("Lock modified time < " + (loopWaitTime * 2) + " => Exit 0");
@@ -249,7 +184,7 @@ public class OwaNotifier extends Observable implements Observer
 	{
 		try
 		{
-			DesktopProxy.browse(this.getProps().getProperty("owaUrl"));
+			DesktopProxy.browse(AuthProperties.getProperty("owaUrl"));
 		}
 		catch (IOException e)
 		{
@@ -293,7 +228,7 @@ public class OwaNotifier extends Observable implements Observer
 			listner.addObserver(this);
 
 			// Redirect user to MS authentication web page
-			int listenPort = Integer.parseInt(this.getProps().getProperty("listenPort"));
+			int listenPort = Integer.parseInt(AuthProperties.getProperty("listenPort"));
 			String loginUrl = AuthHelper.getLoginUrl(state, nonce, listenPort);
 			logger.info("Redirect user to loginUrl: " + loginUrl);
 			try
@@ -332,7 +267,7 @@ public class OwaNotifier extends Observable implements Observer
 		JacksonConverter c = new JacksonConverter(new ObjectMapper());
 		OutlookService outlookService = OutlookServiceBuilder.getOutlookService(this.tokenResponse.getAccessToken(), null);
 
-		int loopWaitTime = Integer.parseInt(owanotifier.getProps().getProperty("loopWaitTime"));
+		int loopWaitTime = Integer.parseInt(AuthProperties.getProperty("loopWaitTime"));
 		while (true)
 		{
 			Thread.sleep(loopWaitTime);

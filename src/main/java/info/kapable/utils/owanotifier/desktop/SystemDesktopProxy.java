@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 
 import info.kapable.utils.owanotifier.OwaNotifier;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
+import info.kapable.utils.owanotifier.resource.AuthProperties;
 
 public class SystemDesktopProxy extends DesktopProxy
 {
@@ -92,7 +93,7 @@ public class SystemDesktopProxy extends DesktopProxy
 						URL f;
 						try
 						{
-							f = new URL(OwaNotifier.getInstance().getProps().getProperty("owaUrl"));
+							f = new URL(AuthProperties.getProperty("owaUrl"));
 							dt.browse(f.toURI());
 						}
 						catch (IOException e1)
@@ -250,7 +251,7 @@ public class SystemDesktopProxy extends DesktopProxy
 				trayIcon.setImage(this.imageNoMail);
 			}
 
-			if(OwaNotifier.getInstance().getProps().getProperty("notification.type").contentEquals("system"))
+			if(AuthProperties.getProperty("notification.type").contentEquals("system"))
 			{
 				trayIcon.displayMessage(event.getEventTitle(), event.getEventText(), MessageType.INFO);
 			}

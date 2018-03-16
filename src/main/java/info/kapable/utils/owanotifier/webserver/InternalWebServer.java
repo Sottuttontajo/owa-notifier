@@ -27,6 +27,7 @@ import info.kapable.utils.owanotifier.OwaNotifier;
 import info.kapable.utils.owanotifier.auth.AuthHelper;
 import info.kapable.utils.owanotifier.auth.AuthListner;
 import info.kapable.utils.owanotifier.auth.IdToken;
+import info.kapable.utils.owanotifier.resource.AuthProperties;
 
 import java.io.IOException;
 import java.net.BindException;
@@ -64,7 +65,7 @@ public class InternalWebServer extends AuthListner implements Runnable, Observer
 	 */
 	public InternalWebServer(UUID nonce) throws IOException
 	{
-		this.listenPort = Integer.parseInt(OwaNotifier.getInstance().getProps().getProperty("listenPort", "8080"));
+		this.listenPort = Integer.parseInt(AuthProperties.getProperty("listenPort", "8080"));
 		this.nonce = nonce;
 		// Search an available port
 		while (this.socket == null)
@@ -87,7 +88,7 @@ public class InternalWebServer extends AuthListner implements Runnable, Observer
 			catch (BindException e)
 			{
 				this.listenPort = this.listenPort + 1;
-				OwaNotifier.getInstance().setProps("listenPort", this.listenPort + "");
+				AuthProperties.setProperty("listenPort", this.listenPort + "");
 			}
 		}
 

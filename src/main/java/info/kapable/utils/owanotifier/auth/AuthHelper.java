@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import info.kapable.utils.owanotifier.JacksonConverter;
-import info.kapable.utils.owanotifier.OwaNotifier;
 import info.kapable.utils.owanotifier.RestfullAcessProxy;
+import info.kapable.utils.owanotifier.resource.AuthProperties;
 
 /**
  * Helper class to login on Microsoft using oauth2
@@ -70,7 +70,7 @@ public class AuthHelper
 		{
 			try
 			{
-				appId = OwaNotifier.getInstance().getProps().getProperty("appId");
+				appId = AuthProperties.getProperty("appId");
 			}
 			catch (Exception e)
 			{
@@ -91,7 +91,7 @@ public class AuthHelper
 		{
 			try
 			{
-				appPassword = OwaNotifier.getInstance().getProps().getProperty("appPassword");
+				appPassword = AuthProperties.getProperty("appPassword");
 			}
 			catch (Exception e)
 			{
@@ -112,12 +112,12 @@ public class AuthHelper
 	 */
 	private static String getRedirectUrl() throws NumberFormatException, IOException
 	{
-		int listenPort = Integer.parseInt(OwaNotifier.getInstance().getProps().getProperty("listenPort"));
+		int listenPort = Integer.parseInt(AuthProperties.getProperty("listenPort"));
 		if(redirectUrl == null)
 		{
 			try
 			{
-				redirectUrl = OwaNotifier.getInstance().getProps().getProperty("redirectUrl");
+				redirectUrl = AuthProperties.getProperty("redirectUrl");
 				redirectUrl = redirectUrl.replace("8080", listenPort + "");
 			}
 			catch (Exception e)

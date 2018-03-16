@@ -24,6 +24,7 @@ SOFTWARE.
 package info.kapable.utils.owanotifier;
 
 import info.kapable.utils.owanotifier.auth.TokenResponse;
+import info.kapable.utils.owanotifier.resource.AuthProperties;
 import info.kapable.utils.owanotifier.teststubs.StubTokenService;
 import info.kapable.utils.owanotifier.utils.HTTPBasicClient;
 import info.kapable.utils.owanotifier.webserver.InternalWebServer;
@@ -57,7 +58,7 @@ public class WebserverClientHandlerTest extends TestCase
 	{
 		try
 		{
-			OwaNotifier.getInstance().setProps("closeWindow", "true");
+			AuthProperties.setProperty("closeWindow", "true");
 		}
 		catch (IOException e)
 		{
@@ -74,7 +75,7 @@ public class WebserverClientHandlerTest extends TestCase
 	{
 		try
 		{
-			OwaNotifier.getInstance().setProps("closeWindow", null);
+			AuthProperties.setProperty("closeWindow", null);
 		}
 		catch (IOException e)
 		{
@@ -92,7 +93,7 @@ public class WebserverClientHandlerTest extends TestCase
 	{
 		try
 		{
-			OwaNotifier.getInstance().setProps("closeWindow", "false");
+			AuthProperties.setProperty("closeWindow", "false");
 		}
 		catch (IOException e)
 		{
@@ -111,7 +112,7 @@ public class WebserverClientHandlerTest extends TestCase
 	{
 		try
 		{
-			HTTPBasicClient client = new HTTPBasicClient(payloadQuery, "localhost", Integer.parseInt(OwaNotifier.getInstance().getProps().getProperty("listenPort")));
+			HTTPBasicClient client = new HTTPBasicClient(payloadQuery, "localhost", Integer.parseInt(AuthProperties.getProperty("listenPort")));
 			client.start();
 
 			try

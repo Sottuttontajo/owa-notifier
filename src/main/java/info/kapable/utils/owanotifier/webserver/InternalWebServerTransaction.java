@@ -26,6 +26,7 @@ package info.kapable.utils.owanotifier.webserver;
 import info.kapable.utils.owanotifier.OwaNotifier;
 import info.kapable.utils.owanotifier.auth.IdToken;
 import info.kapable.utils.owanotifier.auth.TokenResponse;
+import info.kapable.utils.owanotifier.resource.AuthProperties;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -161,7 +162,7 @@ public class InternalWebServerTransaction extends Observable implements Runnable
 			out.write("HTTP/1.1 200 OK\r\n");
 			out.write("Content-Type: text/html\r\n");
 			out.write("\r\n");
-			String closeWindow = OwaNotifier.getInstance().getProps().getProperty("closeWindow");
+			String closeWindow = AuthProperties.getProperty("closeWindow");
 			if(closeWindow == null)
 			{
 				closeWindow = "false";
