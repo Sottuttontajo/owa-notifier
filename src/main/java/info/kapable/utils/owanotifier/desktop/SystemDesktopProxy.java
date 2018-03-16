@@ -48,8 +48,8 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.kapable.utils.owanotifier.InboxChangeEvent;
 import info.kapable.utils.owanotifier.OwaNotifier;
+import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 
 public class SystemDesktopProxy extends DesktopProxy
 {
@@ -241,7 +241,7 @@ public class SystemDesktopProxy extends DesktopProxy
 		// TODO Auto-generated method stub
 		if(SystemTray.isSupported())
 		{
-			if(event.getUnreadItemCount() > 0)
+			if(event.getInbox().getUnreadItemCount() > 0)
 			{
 				trayIcon.setImage(this.imageNewMail);
 			}
@@ -259,9 +259,9 @@ public class SystemDesktopProxy extends DesktopProxy
 		{
 			logger.error("System tray not supported!");
 		}
-		if(event.getUnreadItemCount() > 0)
+		if(event.getInbox().getUnreadItemCount() > 0)
 		{
-			this.setToolTip(event.getUnreadItemCount() + " message(s) non lu");
+			this.setToolTip(event.getInbox().getUnreadItemCount() + " message(s) non lu");
 		}
 		else
 		{

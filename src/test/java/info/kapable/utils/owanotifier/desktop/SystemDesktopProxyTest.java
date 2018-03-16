@@ -20,9 +20,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package info.kapable.utils.owanotifier.desktop;
+ */
+package info.kapable.utils.owanotifier.desktop;
 
-import info.kapable.utils.owanotifier.InboxChangeEvent;
+import info.kapable.utils.owanotifier.event.InboxChangeEvent;
+import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
 import info.kapable.utils.owanotifier.service.EmailAddress;
 import info.kapable.utils.owanotifier.service.Folder;
 import info.kapable.utils.owanotifier.service.Message;
@@ -31,18 +33,25 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-public class SystemDesktopProxyTest extends TestCase {
+public class SystemDesktopProxyTest extends TestCase
+{
 
 	@Test
-	public void test() {
+	public void test()
+	{
 		SystemDesktopProxy s = new SystemDesktopProxy();
 		// Initial Notification
 		Folder folder = new Folder();
 		folder.setUnreadItemCount(1);
-		InboxChangeEvent event = new InboxChangeEvent(folder , InboxChangeEvent.TYPE_MANY_NEW_MSG);
-		try {
+		InboxChangeEvent event = new InboxChangeEvent();
+		event.setInbox(folder);
+		event.setEventType(EventType.MORE_THAN_ONE_NEW_MESSAGE);
+		try
+		{
 			s.processEvent(event);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 			fail("IOException");
 		}
@@ -60,10 +69,16 @@ public class SystemDesktopProxyTest extends TestCase {
 		message.setBodyPreview("BodyPreview de testUnitaire");
 		message.setFrom(from);
 		message.setSubject("Subject de Junit");
-		event = new InboxChangeEvent(folder , message);
-		try {
+		event = new InboxChangeEvent();
+		event.setInbox(folder);
+		event.setEventType(EventType.ONE_NEW_MESSAGE);
+		event.setMessage(message);
+		try
+		{
 			s.processEvent(event);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 			fail("IOException");
 		}
@@ -71,21 +86,31 @@ public class SystemDesktopProxyTest extends TestCase {
 
 		// Test mark a message as read
 		folder.setUnreadItemCount(1);
-		event = new InboxChangeEvent(folder , InboxChangeEvent.TYPE_LESS_NEW_MSG);
-		try {
+		event = new InboxChangeEvent();
+		event.setInbox(folder);
+		event.setEventType(EventType.SOME_MESSAGES_READ);
+		try
+		{
 			s.processEvent(event);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 			fail("IOException");
 		}
 		assertTrue(s.getToolTip().contains("1 message(s) non lu"));
-		
-		// Test last  message mark as read
+
+		// Test last message mark as read
 		folder.setUnreadItemCount(0);
-		event = new InboxChangeEvent(folder , InboxChangeEvent.TYPE_LESS_NEW_MSG);
-		try {
+		event = new InboxChangeEvent();
+		event.setInbox(folder);
+		event.setEventType(EventType.SOME_MESSAGES_READ);
+		try
+		{
 			s.processEvent(event);
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 			fail("IOException");
 		}

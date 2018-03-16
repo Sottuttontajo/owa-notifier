@@ -20,7 +20,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package info.kapable.utils.owanotifier.utils;
+ */
+package info.kapable.utils.owanotifier.utils;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,9 +31,11 @@ import com.notification.Notification;
 import com.notification.NotificationManager;
 import com.notification.types.TextNotification;
 
-public class NotificationManagerTest {
+public class NotificationManagerTest
+{
 	@Test
-	public void addAndRemoveShouldTriggerChildCalls() {
+	public void addAndRemoveShouldTriggerChildCalls()
+	{
 		CustomNotificationManager manager = new CustomNotificationManager();
 		TextNotification note = new TextNotification();
 
@@ -43,7 +46,8 @@ public class NotificationManagerTest {
 	}
 
 	@Test
-	public void addAndRemoveShouldModifyList() {
+	public void addAndRemoveShouldModifyList()
+	{
 		CustomNotificationManager manager = new CustomNotificationManager();
 		TextNotification note = new TextNotification();
 
@@ -54,7 +58,8 @@ public class NotificationManagerTest {
 	}
 
 	@Test
-	public void managerShouldNotDoubleAdd() {
+	public void managerShouldNotDoubleAdd()
+	{
 		CustomNotificationManager manager = new CustomNotificationManager();
 		TextNotification note = new TextNotification();
 
@@ -64,22 +69,27 @@ public class NotificationManagerTest {
 	}
 
 	@Test
-	public void scheduleRemovalShouldRemove() {
+	public void scheduleRemovalShouldRemove()
+	{
 		CustomNotificationManager manager = new CustomNotificationManager();
 		TextNotification note = new TextNotification();
 
 		manager.addNotification(note, Time.infinite());
 		manager.scheduleRemoval(note, Time.milliseconds(50));
-		try {
+		try
+		{
 			Thread.sleep(100);
-		} catch (InterruptedException e) {
+		}
+		catch (InterruptedException e)
+		{
 			e.printStackTrace();
 		}
 		assertEquals("Notification should have been removed once", 1, manager.removedCounter);
 	}
 
 	@Test
-	public void managerShouldNotDoubleRemove() {
+	public void managerShouldNotDoubleRemove()
+	{
 		CustomNotificationManager manager = new CustomNotificationManager();
 		TextNotification note = new TextNotification();
 
@@ -88,30 +98,37 @@ public class NotificationManagerTest {
 		manager.removeNotification(note);
 		manager.removeNotification(note);
 		assertEquals("Notification should have been removed only once", 1, manager.removedCounter);
-		try {
+		try
+		{
 			Thread.sleep(100);
-		} catch (InterruptedException e) {
+		}
+		catch (InterruptedException e)
+		{
 			e.printStackTrace();
 		}
 		assertEquals("Notification should have been removed only once, even after scheduling", 1, manager.removedCounter);
 	}
 
-	private class CustomNotificationManager extends NotificationManager {
+	private class CustomNotificationManager extends NotificationManager
+	{
 		private int addedCounter = 0;
 		private int removedCounter = 0;
 
 		@Override
-		protected void notificationAdded(Notification note, Time time) {
+		protected void notificationAdded(Notification note, Time time)
+		{
 			addedCounter++;
 		}
 
 		@Override
-		protected void notificationRemoved(Notification note) {
+		protected void notificationRemoved(Notification note)
+		{
 			removedCounter++;
 		}
 
 		@Override
-		public void scheduleRemoval(Notification note, Time time) {
+		public void scheduleRemoval(Notification note, Time time)
+		{
 			super.scheduleRemoval(note, time);
 		}
 	}

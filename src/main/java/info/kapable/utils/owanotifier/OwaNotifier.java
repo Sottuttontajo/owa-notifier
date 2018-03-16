@@ -31,6 +31,8 @@ import info.kapable.utils.owanotifier.desktop.DesktopProxy;
 import info.kapable.utils.owanotifier.desktop.LogWindowPanel;
 import info.kapable.utils.owanotifier.desktop.SwingDesktopProxy;
 import info.kapable.utils.owanotifier.desktop.SystemDesktopProxy;
+import info.kapable.utils.owanotifier.event.InboxChangeEvent;
+import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
 import info.kapable.utils.owanotifier.service.Folder;
 import info.kapable.utils.owanotifier.service.Message;
 import info.kapable.utils.owanotifier.service.MessageCollection;
@@ -348,30 +350,59 @@ public class OwaNotifier extends Observable implements Observer
 			Folder inbox = (Folder) c.fromBody(outlookService.getFolder(folder).getBody(), Folder.class);
 			logger.info("New Inbox UnreadItemCount : " + inbox.getUnreadItemCount());
 
-			// First loop iteration change notification icon to no mail
+			EventType eventType = null;
+			
 			if(lastUnreadCount <= 0)
-			{
-				this.setChanged();
-				this.notifyObservers(new InboxChangeEvent(inbox, InboxChangeEvent.TYPE_LESS_NEW_MSG));
-			}
+				eventType = EventType.SOME_MESSAGES_READ;
+			else if(inbox.getUnreadItemCount() > 0 && inbox.getUnreadItemCount() > (lastUnreadCount + 1))
+				eventType = EventType.MORE_THAN_ONE_NEW_MESSAGE;
+			else if(inbox.getUnreadItemCount() > 0 && inbox.getUnreadItemCount() == (lastUnreadCount + 1))
+				eventType = EventType.ONE_NEW_MESSAGE;
+			else if(inbox.getUnreadItemCount() > 0 && inbox.getUnreadItemCount() < lastUnreadCount)
+				eventType = EventType.SOME_MESSAGES_READ;
 
-			if(inbox.getUnreadItemCount() > 0 && inbox.getUnreadItemCount() > (lastUnreadCount + 1))
+			if(eventType != null)
 			{
 				this.setChanged();
-				this.notifyObservers(new InboxChangeEvent(inbox, InboxChangeEvent.TYPE_MANY_NEW_MSG));
+				InboxChangeEvent inboxChangeEvent = new InboxChangeEvent();
+				inboxChangeEvent.setInbox(inbox);
+				inboxChangeEvent.setEventType(eventType);
+				if(eventType == EventType.ONE_NEW_MESSAGE)
+				{
+					MessageCollection m = (MessageCollection) c.fromBody(outlookService.getMessages(inbox.getId(), "receivedDateTime desc", "from,subject,bodyPreview", "isRead eq false", 1).getBody(), MessageCollection.class);
+					Message message = (Message) m.getValue().get(0);
+					inboxChangeEvent.setMessage(message);
+				}
+				this.notifyObservers(inboxChangeEvent);
+				
 			}
-			if(inbox.getUnreadItemCount() > 0 && inbox.getUnreadItemCount() == (lastUnreadCount + 1))
-			{
-				this.setChanged();
-				MessageCollection m = (MessageCollection) c.fromBody(outlookService.getMessages(inbox.getId(), "receivedDateTime desc", "from,subject,bodyPreview", "isRead eq false", 1).getBody(), MessageCollection.class);
-				Message message = (Message) m.getValue().get(0);
-				this.notifyObservers(new InboxChangeEvent(inbox, message));
-			}
-			if(inbox.getUnreadItemCount() > 0 && inbox.getUnreadItemCount() < lastUnreadCount)
-			{
-				this.setChanged();
-				this.notifyObservers(new InboxChangeEvent(inbox, InboxChangeEvent.TYPE_LESS_NEW_MSG));
-			}
+//			// First loop iteration change notification icon to no mail
+//			if(lastUnreadCount <= 0)
+//			{
+//				this.setChanged();
+//				InboxChangeEvent inboxChangeEvent = new InboxChangeEvent();
+//				inboxChangeEvent.setInbox(inbox);
+//				inboxChangeEvent.setEventType(EventType.SOME_MESSAGES_READ);
+//				this.notifyObservers(inboxChangeEvent);
+//			}
+//
+//			if(inbox.getUnreadItemCount() > 0 && inbox.getUnreadItemCount() > (lastUnreadCount + 1))
+//			{
+//				this.setChanged();
+//				this.notifyObservers(new InboxChangeEvent(inbox, InboxChangeEvent.EventType.MANY_NEW_MESSAGES));
+//			}
+//			if(inbox.getUnreadItemCount() > 0 && inbox.getUnreadItemCount() == (lastUnreadCount + 1))
+//			{
+//				this.setChanged();
+//				MessageCollection m = (MessageCollection) c.fromBody(outlookService.getMessages(inbox.getId(), "receivedDateTime desc", "from,subject,bodyPreview", "isRead eq false", 1).getBody(), MessageCollection.class);
+//				Message message = (Message) m.getValue().get(0);
+//				this.notifyObservers(new InboxChangeEvent(inbox, message));
+//			}
+//			if(inbox.getUnreadItemCount() > 0 && inbox.getUnreadItemCount() < lastUnreadCount)
+//			{
+//				this.setChanged();
+//				this.notifyObservers(new InboxChangeEvent(inbox, InboxChangeEvent.EventType.SOME_MESSAGES_READ));
+//			}
 			lastUnreadCount = inbox.getUnreadItemCount();
 			System.gc();
 			Runtime runtime = Runtime.getRuntime();

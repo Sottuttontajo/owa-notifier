@@ -34,8 +34,9 @@ import com.notification.NotificationFactory;
 import com.notification.NotificationFactory.Location;
 import com.notification.types.IconNotification;
 
-import info.kapable.utils.owanotifier.InboxChangeEvent;
 import info.kapable.utils.owanotifier.OwaNotifier;
+import info.kapable.utils.owanotifier.event.InboxChangeEvent;
+import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
 import info.kapable.utils.owanotifier.notification.manager.SimpleManager;
 import info.kapable.utils.owanotifier.theme.ThemePackagePresets;
 import info.kapable.utils.owanotifier.utils.Time;
@@ -69,13 +70,13 @@ public class SwingDesktopProxy extends DesktopProxy
 
 		IconNotification oldNotification = notification;
 		// The notification window :
-		if(event.getEventType() == InboxChangeEvent.TYPE_ONE_NEW_MSG)
+		if(event.getEventType() == EventType.ONE_NEW_MESSAGE)
 			notification = factory.buildIconNotification("De: " + event.getEventFrom(), event.getEventTitle(), event.getEventText(), new ImageIcon(this.icon.getScaledInstance(50, 50, Image.SCALE_DEFAULT)));
-		else if(event.getEventType() == InboxChangeEvent.TYPE_MANY_NEW_MSG)
+		else if(event.getEventType() == EventType.MORE_THAN_ONE_NEW_MESSAGE)
 			notification = factory.buildIconNotification(null, event.getEventTitle(), event.getEventText(), new ImageIcon(this.icon.getScaledInstance(50, 50, Image.SCALE_DEFAULT)));
-		else if(event.getEventType() == InboxChangeEvent.TYPE_LESS_NEW_MSG && event.getUnreadItemCount() > 0)
+		else if(event.getEventType() == EventType.SOME_MESSAGES_READ && event.getInbox().getUnreadItemCount() > 0)
 			notification = factory.buildIconNotification(null, event.getEventTitle(), event.getEventText(), new ImageIcon(this.icon.getScaledInstance(50, 50, Image.SCALE_DEFAULT)));
-		else if(notification != null && notification.isShown() && event.getUnreadItemCount() == 0)
+		else if(notification != null && notification.isShown() && event.getInbox().getUnreadItemCount() == 0)
 		{
 			notification.hide();
 			return;

@@ -20,21 +20,24 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package info.kapable.utils.owanotifier.service;
+ */
+package info.kapable.utils.owanotifier.service;
 
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class OutlookUserTest {
+public class OutlookUserTest
+{
 
 	@Test
-	public void test() {
+	public void test()
+	{
 		OutlookUser u = new OutlookUser();
 		u.setId("john");
 		u.setMail("test@example.com");
 		u.setDisplayName("John Do");
-		
+
 		assertTrue(u.getId().contentEquals("john"));
 		assertTrue(u.getMail().contentEquals("test@example.com"));
 		assertTrue(u.getDisplayName().contentEquals("John Do"));

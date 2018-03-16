@@ -20,23 +20,26 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
- */package info.kapable.utils.owanotifier.service;
+ */
+package info.kapable.utils.owanotifier.service;
 
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class FolderTest {
+public class FolderTest
+{
 
 	@Test
-	public void test() {
+	public void test()
+	{
 		Folder f = new Folder();
 		f.setId("inbox");
 		f.setChildFolderCount(3);
 		f.setParentFolderId("root");
 		f.setTotalItemCount(10);
 		f.setUnreadItemCount(3);
-		
+
 		assertTrue(f.getId().contentEquals("inbox"));
 		assertTrue(f.getChildFolderCount() == 3);
 		assertTrue(f.getParentFolderId().contentEquals("root"));
