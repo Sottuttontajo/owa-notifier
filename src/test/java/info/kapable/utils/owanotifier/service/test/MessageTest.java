@@ -21,36 +21,45 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package info.kapable.utils.owanotifier.utils;
+package info.kapable.utils.owanotifier.service.test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Date;
 
 import org.junit.Test;
 
-import com.notification.types.ProgressBarNotification;
+import info.kapable.utils.owanotifier.service.EmailAddress;
+import info.kapable.utils.owanotifier.service.Message;
+import info.kapable.utils.owanotifier.service.Recipient;
 
-public class ProgressBarNotificationTest
+public class MessageTest
 {
-	@Test
-	public void progressBarShouldStartWith0()
-	{
-		ProgressBarNotification note = new ProgressBarNotification();
-		assertEquals("ProgressBarNotification should start with 0 progress", 0, note.getProgress());
-	}
 
 	@Test
-	public void progressBarShouldNotExceed100()
+	public void test()
 	{
-		ProgressBarNotification note = new ProgressBarNotification();
-		note.setProgress(123);
-		assertEquals("ProgressBarNotification should not exceed 100 progress", 100, note.getProgress());
+		EmailAddress e = new EmailAddress();
+		e.setAddress("test@example.com");
+		e.setName("John Do");
+
+		Recipient r = new Recipient();
+		r.setEmailAddress(e);
+
+		Message m = new Message();
+		m.setBodyPreview("body preview");
+		m.setFrom(r);
+		m.setId("message1");
+		m.setIsRead(false);
+		m.setReceivedDateTime(new Date());
+		m.setSubject("subject1");
+
+		assertTrue(m.getBodyPreview().contains("body preview"));
+		assertTrue(m.getFrom().getEmailAddress().getAddress().contentEquals("test@example.com"));
+		assertTrue(m.getId().contentEquals("message1"));
+		assertTrue(m.getIsRead() == false);
+		assertTrue(m.getReceivedDateTime().getClass() == Date.class);
+		assertTrue(m.getSubject().contentEquals("subject1"));
 	}
 
-	@Test
-	public void progressBarShouldNotGoBelow0()
-	{
-		ProgressBarNotification note = new ProgressBarNotification();
-		note.setProgress(-10);
-		assertEquals("ProgressBarNotification should not go below 0 progress", 0, note.getProgress());
-	}
 }

@@ -21,9 +21,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package info.kapable.utils.owanotifier.desktop;
+package info.kapable.utils.owanotifier.desktop.test;
 
-import info.kapable.utils.owanotifier.OwaNotifier;
+import org.junit.Test;
+
+import info.kapable.utils.owanotifier.desktop.SystemDesktopProxy;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
 import info.kapable.utils.owanotifier.service.EmailAddress;
@@ -32,40 +34,32 @@ import info.kapable.utils.owanotifier.service.Message;
 import info.kapable.utils.owanotifier.service.Recipient;
 import junit.framework.TestCase;
 
-import org.junit.Test;
-
-public class SwingDesktopProxyTest extends TestCase
+public class SystemDesktopProxyTest extends TestCase
 {
 
 	@Test
-	public void testReceiveMoreThanOneNewMessage()
+	public void test()
 	{
-		SwingDesktopProxy s = new SwingDesktopProxy();
-		OwaNotifier.setMute(false);
+		SystemDesktopProxy s = new SystemDesktopProxy();
 		// Initial Notification
 		Folder folder = new Folder();
 		folder.setUnreadItemCount(1);
 		InboxChangeEvent event = new InboxChangeEvent();
 		event.setInbox(folder);
 		event.setEventType(EventType.MORE_THAN_ONE_NEW_MESSAGE);
-		
 		try
 		{
-			s.processEvent(event);
+			s.update(null, event);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 			fail("IOException");
 		}
-		assertTrue(s.getNotification().getTitle().contains("Nouveaux Messages"));
-		assertTrue(s.getNotification().getSubtitle().contains("1 message(s) non lu"));
-	}
+		String toolTip = s.getToolTip();
+		assertTrue(toolTip.contains("1 message(s) non lu"));
 
-	@Test
-	public void testReceiveOneNewMessage()
-	{
-		Folder folder = new Folder();
+		// Test receive a new messages
 		folder.setUnreadItemCount(2);
 		EmailAddress emailAddress = new EmailAddress();
 		emailAddress.setAddress("foo@bar.com");
@@ -76,71 +70,52 @@ public class SwingDesktopProxyTest extends TestCase
 		message.setBodyPreview("BodyPreview de testUnitaire");
 		message.setFrom(from);
 		message.setSubject("Subject de Junit");
-		InboxChangeEvent event = new InboxChangeEvent();
+		event = new InboxChangeEvent();
 		event.setInbox(folder);
 		event.setEventType(EventType.ONE_NEW_MESSAGE);
 		event.setMessage(message);
-
-		SwingDesktopProxy s = new SwingDesktopProxy();
 		try
 		{
-			s.processEvent(event);
+			s.update(null, event);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 			fail("IOException");
 		}
-		assertTrue(s.getNotification() != null);
-		assertTrue(s.getNotification().getTitle().contains("Subject de Junit"));
-		assertTrue(s.getNotification().getSubtitle().contains("BodyPreview de testUnitaire"));
-		assertTrue(s.getNotification().getFrom().contains("De: Foo Bar"));
-		assertTrue(s.getNotification().getFrom().contains("foo@bar.com"));
-	}
+		assertTrue(s.getToolTip().contains("2 message(s) non lu"));
 
-	@Test
-	public void testSomeMessagesAreRead()
-	{
-		Folder folder = new Folder();
-		folder.setUnreadItemCount(4);
-		InboxChangeEvent event = new InboxChangeEvent();
+		// Test mark a message as read
+		folder.setUnreadItemCount(1);
+		event = new InboxChangeEvent();
 		event.setInbox(folder);
 		event.setEventType(EventType.SOME_MESSAGES_READ);
-
-		SwingDesktopProxy s = new SwingDesktopProxy();
 		try
 		{
-			s.processEvent(event);
+			s.update(null, event);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 			fail("IOException");
 		}
-		assertTrue(s.getNotification() != null);
-		assertTrue(s.getNotification().getSubtitle().contains("4 message(s) non lu"));
-	}
+		assertTrue(s.getToolTip().contains("1 message(s) non lu"));
 
-
-	@Test
-	public void allMessagesAreRead()
-	{
-		Folder folder = new Folder();
+		// Test last message mark as read
 		folder.setUnreadItemCount(0);
-		InboxChangeEvent event = new InboxChangeEvent();
+		event = new InboxChangeEvent();
 		event.setInbox(folder);
 		event.setEventType(EventType.SOME_MESSAGES_READ);
-
-		SwingDesktopProxy s = new SwingDesktopProxy();
 		try
 		{
-			s.processEvent(event);
+			s.update(null, event);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 			fail("IOException");
 		}
-		assertTrue(s.getNotification() == null);
+		assertTrue(s.getToolTip().contains("Pas de message non lu"));
 	}
+
 }

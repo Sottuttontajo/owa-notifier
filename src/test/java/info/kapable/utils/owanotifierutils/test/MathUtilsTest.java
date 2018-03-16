@@ -21,11 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package info.kapable.utils.owanotifier.utils;
+package info.kapable.utils.owanotifierutils.test;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+
+import info.kapable.utils.owanotifier.utils.MathUtils;
 
 public class MathUtilsTest
 {

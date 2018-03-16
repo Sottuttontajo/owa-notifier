@@ -21,23 +21,36 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package info.kapable.utils.owanotifier.service;
+package info.kapable.utils.owanotifierutils.test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class EmailAddressTest
-{
+import com.notification.types.ProgressBarNotification;
 
+public class ProgressBarNotificationTest
+{
 	@Test
-	public void test()
+	public void progressBarShouldStartWith0()
 	{
-		EmailAddress e = new EmailAddress();
-		e.setAddress("test@example.com");
-		e.setName("John Do");
-		assertTrue(e.getAddress().contentEquals("test@example.com"));
-		assertTrue(e.getName().contentEquals("John Do"));
+		ProgressBarNotification note = new ProgressBarNotification();
+		assertEquals("ProgressBarNotification should start with 0 progress", 0, note.getProgress());
 	}
 
+	@Test
+	public void progressBarShouldNotExceed100()
+	{
+		ProgressBarNotification note = new ProgressBarNotification();
+		note.setProgress(123);
+		assertEquals("ProgressBarNotification should not exceed 100 progress", 100, note.getProgress());
+	}
+
+	@Test
+	public void progressBarShouldNotGoBelow0()
+	{
+		ProgressBarNotification note = new ProgressBarNotification();
+		note.setProgress(-10);
+		assertEquals("ProgressBarNotification should not go below 0 progress", 0, note.getProgress());
+	}
 }

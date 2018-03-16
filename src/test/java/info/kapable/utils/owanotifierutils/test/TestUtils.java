@@ -21,21 +21,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package info.kapable.utils.owanotifier.utils;
+package info.kapable.utils.owanotifierutils.test;
 
-import static org.junit.Assert.assertFalse;
-
-import org.junit.Test;
-
-import com.notification.Notification;
-import com.notification.types.TextNotification;
-
-public class NotificationTest
+public class TestUtils
 {
-	@Test
-	public void notificationShouldStartUnmanaged()
-	{
-		Notification note = new TextNotification();
-		assertFalse("Notification should start unmanaged", note.isManaged());
-	}
+	public static final double TINY_DELTA = 0.000000001;
 }

@@ -21,20 +21,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package info.kapable.utils.owanotifier;
+package info.kapable.utils.owanotifier.test;
 
+import java.io.IOException;
+import java.util.UUID;
+
+import org.junit.Test;
+
+import info.kapable.utils.owanotifier.OwaNotifier;
+import info.kapable.utils.owanotifier.RestfullAcessProxy;
 import info.kapable.utils.owanotifier.auth.TokenResponse;
 import info.kapable.utils.owanotifier.resource.AuthProperties;
 import info.kapable.utils.owanotifier.teststubs.StubTokenService;
 import info.kapable.utils.owanotifier.utils.HTTPBasicClient;
 import info.kapable.utils.owanotifier.webserver.InternalWebServer;
-
-import java.io.IOException;
-import java.util.UUID;
-
 import junit.framework.TestCase;
-
-import org.junit.Test;
 
 public class WebserverClientHandlerTest extends TestCase
 {

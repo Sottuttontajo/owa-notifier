@@ -21,9 +21,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package info.kapable.utils.owanotifier.utils;
+package info.kapable.utils.owanotifier.service.test;
 
-public class TestUtils
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
+
+import info.kapable.utils.owanotifier.service.EmailAddress;
+
+public class EmailAddressTest
 {
-	public static final double TINY_DELTA = 0.000000001;
+
+	@Test
+	public void test()
+	{
+		EmailAddress e = new EmailAddress();
+		e.setAddress("test@example.com");
+		e.setName("John Do");
+		assertTrue(e.getAddress().contentEquals("test@example.com"));
+		assertTrue(e.getName().contentEquals("John Do"));
+	}
+
 }

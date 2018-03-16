@@ -21,26 +21,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package info.kapable.utils.owanotifier.service;
+package info.kapable.utils.owanotifier.service.test;
 
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class RecipientTest
+import info.kapable.utils.owanotifier.service.Folder;
+
+public class FolderTest
 {
 
 	@Test
 	public void test()
 	{
-		EmailAddress e = new EmailAddress();
-		e.setAddress("test@example.com");
-		e.setName("John Do");
+		Folder f = new Folder();
+		f.setId("inbox");
+		f.setChildFolderCount(3);
+		f.setParentFolderId("root");
+		f.setTotalItemCount(10);
+		f.setUnreadItemCount(3);
 
-		Recipient r = new Recipient();
-		r.setEmailAddress(e);
-
-		assertTrue(r.getEmailAddress().getAddress().contentEquals("test@example.com"));
+		assertTrue(f.getId().contentEquals("inbox"));
+		assertTrue(f.getChildFolderCount() == 3);
+		assertTrue(f.getParentFolderId().contentEquals("root"));
+		assertTrue(f.getTotalItemCount() == 10);
+		assertTrue(f.getUnreadItemCount() == 3);
 	}
 
 }

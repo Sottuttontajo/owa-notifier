@@ -21,41 +21,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package info.kapable.utils.owanotifier.service;
+package info.kapable.utils.owanotifierutils.test;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.Date;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
-public class MessageTest
+import com.notification.Notification;
+import com.notification.types.TextNotification;
+
+public class NotificationTest
 {
-
 	@Test
-	public void test()
+	public void notificationShouldStartUnmanaged()
 	{
-		EmailAddress e = new EmailAddress();
-		e.setAddress("test@example.com");
-		e.setName("John Do");
-
-		Recipient r = new Recipient();
-		r.setEmailAddress(e);
-
-		Message m = new Message();
-		m.setBodyPreview("body preview");
-		m.setFrom(r);
-		m.setId("message1");
-		m.setIsRead(false);
-		m.setReceivedDateTime(new Date());
-		m.setSubject("subject1");
-
-		assertTrue(m.getBodyPreview().contains("body preview"));
-		assertTrue(m.getFrom().getEmailAddress().getAddress().contentEquals("test@example.com"));
-		assertTrue(m.getId().contentEquals("message1"));
-		assertTrue(m.getIsRead() == false);
-		assertTrue(m.getReceivedDateTime().getClass() == Date.class);
-		assertTrue(m.getSubject().contentEquals("subject1"));
+		Notification note = new TextNotification();
+		assertFalse("Notification should start unmanaged", note.isManaged());
 	}
-
 }
