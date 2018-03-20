@@ -27,6 +27,6 @@ public class Labels extends ResourceBundleProperties
 	@Override
 	protected String getResourcePath()
 	{
-		return "labels";
+		return "property.bundle.labels";
 	}
 }

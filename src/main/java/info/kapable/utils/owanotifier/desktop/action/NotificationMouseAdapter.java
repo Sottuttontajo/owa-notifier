@@ -25,10 +25,10 @@ package info.kapable.utils.owanotifier.desktop.action;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.MalformedURLException;
 
 import javax.swing.JLabel;
 
+import info.kapable.utils.owanotifier.OwaNotifier;
 import info.kapable.utils.owanotifier.desktop.DesktopProxy;
 
 public class NotificationMouseAdapter extends MouseAdapter
@@ -60,9 +60,9 @@ public class NotificationMouseAdapter extends MouseAdapter
 		{
 			DesktopProxy.browse("https://outlook.office.com/owa/");
 		}
-		catch (MalformedURLException e1)
+		catch(Throwable t)
 		{
-			e1.printStackTrace();
+			OwaNotifier.handleError("browse.io_error", t);
 		}
 	}
 }

@@ -26,6 +26,7 @@ package info.kapable.utils.owanotifier;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.prefs.Preferences;
 
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import info.kapable.utils.owanotifier.desktop.DesktopProxy;
 import info.kapable.utils.owanotifier.desktop.LogWindowPanel;
+import info.kapable.utils.owanotifier.exception.SwingExceptionViewer;
 import info.kapable.utils.owanotifier.resource.AuthProperties;
 import info.kapable.utils.owanotifier.resource.Labels;
 
@@ -56,6 +58,9 @@ public class OwaNotifier
 
 	// variable to store mute status
 	private static boolean mute;
+
+	private static SwingExceptionViewer swingExceptionViewer;
+
 	/**
 	 * Update mute status in Java/Prefs, this state is saving and restoring at
 	 * OwaNotifier boot
@@ -158,9 +163,13 @@ public class OwaNotifier
 		{
 			DesktopProxy.browse(AuthProperties.getProperty("owaUrl"));
 		}
-		catch (IOException e)
+		catch(IOException e)
 		{
-			logger.error(Labels.getLabel("browse.io_error"), e);
+			OwaNotifier.handleError("browse.io_error", e);
+		}
+		catch (URISyntaxException e)
+		{
+			OwaNotifier.handleError("browse.io_error", e);
 		}
 	}
 
@@ -182,5 +191,26 @@ public class OwaNotifier
 			owanotifier = new OwaNotifier();
 		}
 		return owanotifier;
+	}
+
+	public synchronized static void handleError(String labelCode, Throwable t)
+	{
+		String label = Labels.getLabel(labelCode);
+		logger.error(label, t);
+
+		if(swingExceptionViewer == null)
+			swingExceptionViewer = new SwingExceptionViewer(label);
+
+		swingExceptionViewer.show(t);
+	}
+
+	public static SwingExceptionViewer getSwingExceptionViewer()
+	{
+		return swingExceptionViewer;
+	}
+
+	public static void setSwingExceptionViewer(SwingExceptionViewer swingExceptionViewer)
+	{
+		OwaNotifier.swingExceptionViewer = swingExceptionViewer;
 	}
 }

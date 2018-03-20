@@ -63,10 +63,10 @@ public abstract class DesktopProxy implements Observer
 	 * 
 	 * @param url
 	 *            the page web to follow
-	 * @throws MalformedURLException
-	 *             in case of url is not an url
+	 * @throws URISyntaxException 
+	 * @throws IOException 
 	 */
-	public static void browse(String url) throws MalformedURLException
+	public static void browse(String url) throws IOException, URISyntaxException
 	{
 		// Start browser
 		if(Desktop.isDesktopSupported())
@@ -75,18 +75,7 @@ public abstract class DesktopProxy implements Observer
 			if(dt.isSupported(Desktop.Action.BROWSE))
 			{
 				URL f = new URL(url);
-				try
-				{
-					dt.browse(f.toURI());
-				}
-				catch (IOException e)
-				{
-					e.printStackTrace();
-				}
-				catch (URISyntaxException e)
-				{
-					e.printStackTrace();
-				}
+				dt.browse(f.toURI());
 			}
 		}
 		else

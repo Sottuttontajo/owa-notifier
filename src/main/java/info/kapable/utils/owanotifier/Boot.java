@@ -22,7 +22,6 @@ import info.kapable.utils.owanotifier.desktop.SwingDesktopProxy;
 import info.kapable.utils.owanotifier.desktop.SystemDesktopProxy;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
-import info.kapable.utils.owanotifier.exception.SwingExceptionViewer;
 import info.kapable.utils.owanotifier.resource.AuthProperties;
 import info.kapable.utils.owanotifier.resource.Labels;
 import info.kapable.utils.owanotifier.service.Folder;
@@ -35,7 +34,6 @@ import info.kapable.utils.owanotifier.webserver.InternalWebServer;
 public class Boot extends Observable implements Observer
 {
 	private static Logger logger = LoggerFactory.getLogger(Boot.class);
-	private SwingExceptionViewer swingExceptionViewer;
 	private LoginHandler loginHandler;
 	// A public object to store auth
 	public TokenResponse tokenResponse;
@@ -66,11 +64,7 @@ public class Boot extends Observable implements Observer
 		}
 		catch (Throwable t)
 		{
-			if(swingExceptionViewer == null)
-				swingExceptionViewer = new SwingExceptionViewer(Labels.getLabel("dialog.error.title.boot"));
-
-			swingExceptionViewer.show(t);
-
+			OwaNotifier.handleError("dialog.error.title.boot", t);
 			OwaNotifier.exit(7);
 		}
 	}
@@ -178,16 +172,6 @@ public class Boot extends Observable implements Observer
 		this.lock = lock;
 	}
 
-	public SwingExceptionViewer getSwingExceptionViewer()
-	{
-		return swingExceptionViewer;
-	}
-
-	public void setSwingExceptionViewer(SwingExceptionViewer swingExceptionViewer)
-	{
-		this.swingExceptionViewer = swingExceptionViewer;
-	}
-
 	@Override
 	public void update(Observable o, Object arg)
 	{
@@ -210,10 +194,7 @@ public class Boot extends Observable implements Observer
 		{
 			try
 			{
-				if(swingExceptionViewer == null)
-					swingExceptionViewer = new SwingExceptionViewer(Labels.getLabel("dialog.error.title.infinite_loop"));
-
-				swingExceptionViewer.show(t);
+				OwaNotifier.handleError("dialog.error.title.infinite_loop", t);
 				throw t;
 			}
 			catch (JsonParseException e)

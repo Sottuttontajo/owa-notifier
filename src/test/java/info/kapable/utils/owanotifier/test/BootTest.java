@@ -19,18 +19,28 @@ import junit.framework.TestCase;
 
 public class BootTest extends TestCase
 {
+	private SwingExceptionViewerMock swingExceptionViewer;
+
 	@Override
 	protected void setUp() throws Exception
 	{
 		OwaNotifier.testMode = true;
+		swingExceptionViewer = new SwingExceptionViewerMock("Error");		
+		OwaNotifier.setSwingExceptionViewer(swingExceptionViewer);
 	}
 	
 	@Test
-	public void testErrorOnBoot()
+	public void testAll() throws IOException
+	{
+		errorOnBoot();
+		swingExceptionViewer.setErrorShown(false);
+		errorOnUpdate();
+	}
+	
+	public void errorOnBoot()
 	{
 		Boot boot = new Boot(null);
 
-		SwingExceptionViewerMock swingExceptionViewer = new SwingExceptionViewerMock("Error");		
 		LoginHandler loginHandler = new LoginHandler(null)
 		{
 			@Override
@@ -41,15 +51,12 @@ public class BootTest extends TestCase
 		};
 		
 		boot.setLoginHandler(loginHandler);
-		boot.setSwingExceptionViewer(swingExceptionViewer);
 		boot.boot();
 		assertTrue(swingExceptionViewer.isErrorShown());
 	}
 
-	@Test
-	public void testErrorOnUpdate() throws IOException
+	public void errorOnUpdate() throws IOException
 	{
-		SwingExceptionViewerMock swingExceptionViewer = new SwingExceptionViewerMock("Error");		
 		Boot boot = new Boot(null)
 		{
 			@Override
@@ -58,7 +65,6 @@ public class BootTest extends TestCase
 				throw new RuntimeException("Test error");
 			}
 		};
-		boot.setSwingExceptionViewer(swingExceptionViewer);
 		InternalWebServer internalWebServer = new InternalWebServer(null);
 		internalWebServer.tokenResponse = new TokenResponse();
 		boot.update(internalWebServer, null);
@@ -79,6 +85,11 @@ public class BootTest extends TestCase
 		public void show(Throwable t)
 		{
 			errorShown  = true;
+		}
+		
+		public void setErrorShown(boolean errorShown)
+		{
+			this.errorShown = errorShown;
 		}
 		
 		public boolean isErrorShown()
