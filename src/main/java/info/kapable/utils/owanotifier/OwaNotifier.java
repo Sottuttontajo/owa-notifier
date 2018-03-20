@@ -52,6 +52,7 @@ import info.kapable.utils.owanotifier.desktop.SystemDesktopProxy;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
 import info.kapable.utils.owanotifier.resource.AuthProperties;
+import info.kapable.utils.owanotifier.resource.Labels;
 import info.kapable.utils.owanotifier.service.Folder;
 import info.kapable.utils.owanotifier.service.Message;
 import info.kapable.utils.owanotifier.service.MessageCollection;
@@ -162,13 +163,13 @@ public class OwaNotifier extends Observable implements Observer
 		if(owanotifier.lock.isFile())
 		{
 			long lm = owanotifier.lock.lastModified();
-			logger.info("Lock modified time : " + lm);
-			logger.info("System current time : " + System.currentTimeMillis());
+			logger.info(Labels.getLabel("time.lock") + lm);
+			logger.info(Labels.getLabel("time.system") + System.currentTimeMillis());
 			// If lock is not update
 			int loopWaitTime = Integer.parseInt(AuthProperties.getProperty("loopWaitTime"));
 			if((System.currentTimeMillis() - lm) < (loopWaitTime * 2))
 			{
-				logger.info("Lock modified time < " + (loopWaitTime * 2) + " => Exit 0");
+				logger.info(Labels.getLabel("time.lock") + " < " + (loopWaitTime * 2) + " => " + Labels.getLabel("exit.0"));
 				owanotifier.redirectUserToWebMail();
 				exit(0);
 			}
@@ -188,7 +189,7 @@ public class OwaNotifier extends Observable implements Observer
 		}
 		catch (IOException e)
 		{
-			logger.error("IOException while attempting to browse owaUrl ", e);
+			logger.error(Labels.getLabel("browse.io_error"), e);
 		}
 	}
 
@@ -197,7 +198,7 @@ public class OwaNotifier extends Observable implements Observer
 	 */
 	private void boot()
 	{
-		logger.info("--- Owa-Notifier ---");
+		logger.info(Labels.getLabel("boot"));
 
 		// Add different notification observer
 		//
@@ -230,7 +231,7 @@ public class OwaNotifier extends Observable implements Observer
 			// Redirect user to MS authentication web page
 			int listenPort = Integer.parseInt(AuthProperties.getProperty("listenPort"));
 			String loginUrl = AuthHelper.getLoginUrl(state, nonce, listenPort);
-			logger.info("Redirect user to loginUrl: " + loginUrl);
+			logger.info(Labels.getLabel("login.redirect") + loginUrl);
 			try
 			{
 				DesktopProxy.browse(loginUrl);
@@ -277,13 +278,13 @@ public class OwaNotifier extends Observable implements Observer
 			// If token is expired refresh token
 			if(this.tokenResponse.getExpirationTime().before(now.getTime()))
 			{
-				logger.info("Refresh Token");
+				logger.info(Labels.getLabel("token.refresh"));
 				this.tokenResponse = AuthHelper.getTokenFromRefresh(this.tokenResponse, this.idToken.getTenantId());
 				outlookService = OutlookServiceBuilder.getOutlookService(this.tokenResponse.getAccessToken(), null);
 			}
 			// Retrieve messages from the inbox
 			Folder inbox = (Folder) c.fromBody(outlookService.getFolder(folder).getBody(), Folder.class);
-			logger.info("New Inbox UnreadItemCount : " + inbox.getUnreadItemCount());
+			logger.info(Labels.getLabel("notification.new_unread_item_count") + inbox.getUnreadItemCount());
 
 			EventType eventType = null;
 			
@@ -362,7 +363,7 @@ public class OwaNotifier extends Observable implements Observer
 	 */
 	private void updateLock() throws IOException
 	{
-		logger.debug("Update lock file");
+		logger.debug(Labels.getLabel("lock.update"));
 		FileWriter writer = new FileWriter(this.lock);
 		writer.write(System.currentTimeMillis() + "");
 		writer.close();
@@ -394,7 +395,7 @@ public class OwaNotifier extends Observable implements Observer
 		InternalWebServer authListner = (InternalWebServer) o;
 		if(authListner.tokenResponse == null)
 		{
-			logger.error("No token, error");
+			logger.error(Labels.getLabel("token.error.no_token"));
 			OwaNotifier.exit(5);
 		}
 		else
@@ -408,25 +409,25 @@ public class OwaNotifier extends Observable implements Observer
 		}
 		catch (JsonParseException e)
 		{
-			logger.error("JsonParseException durring infiniteLoop()", e);
+			logger.error(Labels.getLabel("infinite_loop.json.error.parse"), e);
 			e.printStackTrace();
 			OwaNotifier.exit(6);
 		}
 		catch (JsonMappingException e)
 		{
-			logger.error("JsonMappingException durring infiniteLoop()", e);
+			logger.error(Labels.getLabel("infinite_loop.json.error.mapping"), e);
 			e.printStackTrace();
 			OwaNotifier.exit(6);
 		}
 		catch (IOException e)
 		{
-			logger.error("IOException durring infiniteLoop()", e);
+			logger.error(Labels.getLabel("infinite_loop.io_error"), e);
 			e.printStackTrace();
 			OwaNotifier.exit(6);
 		}
 		catch (InterruptedException e)
 		{
-			logger.error("InterruptedException durring infiniteLoop()", e);
+			logger.error(Labels.getLabel("infinite_loop.interrupt_error"), e);
 			e.printStackTrace();
 			OwaNotifier.exit(6);
 		}

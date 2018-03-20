@@ -31,6 +31,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import info.kapable.utils.owanotifier.resource.Labels;
 import info.kapable.utils.owanotifier.theme.TextTheme;
 import info.kapable.utils.owanotifier.theme.WindowTheme;
 
@@ -47,8 +48,8 @@ public class AcceptNotification extends TextNotification
 
 	public AcceptNotification()
 	{
-		m_accept = new JButton("Accept");
-		m_decline = new JButton("Decline");
+		m_accept = new JButton(Labels.getLabel("accept"));
+		m_decline = new JButton(Labels.getLabel("decline"));
 		m_accepted = false;
 
 		m_accept.addActionListener(new ActionListener()

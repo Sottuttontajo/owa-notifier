@@ -5,64 +5,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import info.kapable.utils.owanotifier.auth.AuthHelper;
-
-public abstract class ResourceProperties
+public abstract class ResourceProperties extends ResourceConfiguration<Properties>
 {
-	private Properties properties;
-
-	/**
-	 * Load config from properties in ressource
-	 * 
-	 * @throws IOException
-	 */
-	protected void loadConfig() throws IOException
+	protected Properties loadConfig() throws IOException
 	{
-		String authConfigFile = "property/auth.properties";
-		InputStream authConfigStream = AuthHelper.class.getClassLoader().getResourceAsStream(authConfigFile);
+		InputStream propertiesInputStream = getClass().getClassLoader().getResourceAsStream(getResourcePath());
 
-		if(authConfigStream != null)
+		if(propertiesInputStream != null)
 		{
-			properties = new Properties();
-			properties.load(authConfigStream);
+			Properties properties = new Properties();
+			properties.load(propertiesInputStream);
+			return properties;
 		}
 		else
 		{
-			throw new FileNotFoundException("Property file '" + authConfigFile + "' not found in the classpath.");
+			throw new FileNotFoundException("Property file '" + getResourcePath() + "' not found in the classpath.");
 		}
-	}
-
-	/**
-	 * return properties
-	 * 
-	 * @return Return application properties
-	 * @throws IOException
-	 *             In case of exception during loading properties
-	 */
-	protected Properties getProperties() throws IOException
-	{
-		if(properties == null)
-		{
-			loadConfig();
-		}
-		return properties;
 	}
 	
-	/**
-	 * Update a property
-	 * 
-	 * @param key
-	 *            String to identify property in store
-	 * @param value
-	 *            The value to store
-	 * @throws IOException
-	 *             In case of error when storing in properties
-	 */
 	protected void setOrRemoveProperty(String key, String value) throws IOException
 	{
 		if(value != null)
-			properties.put(key, value);
+			getResource().put(key, value);
 		else
-			properties.remove(key);
+			getResource().remove(key);
 	}
 }

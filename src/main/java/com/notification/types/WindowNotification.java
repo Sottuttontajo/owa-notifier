@@ -33,6 +33,7 @@ import javax.swing.JWindow;
 
 import com.notification.Notification;
 
+import info.kapable.utils.owanotifier.resource.Labels;
 import info.kapable.utils.owanotifier.theme.WindowTheme;
 
 /**
@@ -51,12 +52,15 @@ public abstract class WindowNotification extends Notification
 
 	private static final int DEFAULT_WIDTH = 300;
 	private static final int DEFAULT_HEIGHT = 100;
-	public static final String CLICKED = "clicked";
-	public static final String SHOWN = "shown";
-	public static final String HIDDEN = "hidden";
+	public static String CLICKED;
+	public static String SHOWN;
+	public static String HIDDEN;
 
 	public WindowNotification()
 	{
+		CLICKED = Labels.getLabel("clicked");
+		SHOWN = Labels.getLabel("shown");
+		HIDDEN = Labels.getLabel("hidden");
 		m_window = new JWindow();
 		m_window.setAlwaysOnTop(true);
 

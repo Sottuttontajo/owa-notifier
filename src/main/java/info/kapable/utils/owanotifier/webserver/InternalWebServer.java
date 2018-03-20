@@ -28,6 +28,7 @@ import info.kapable.utils.owanotifier.auth.AuthHelper;
 import info.kapable.utils.owanotifier.auth.AuthListner;
 import info.kapable.utils.owanotifier.auth.IdToken;
 import info.kapable.utils.owanotifier.resource.AuthProperties;
+import info.kapable.utils.owanotifier.resource.Labels;
 
 import java.io.IOException;
 import java.net.BindException;
@@ -75,14 +76,14 @@ public class InternalWebServer extends AuthListner implements Runnable, Observer
 				InetAddress[] IP = InetAddress.getAllByName("localhost");
 				if(IP.length < 1)
 				{
-					throw new IOException("Unable to find localhost ip");
+					throw new IOException(Labels.getLabel("browse.error.localhost_ip_not_found"));
 				}
 				this.socket = new ServerSocket(this.listenPort, 10, IP[0]); // Start,
 																			// listen
 																			// on
 																			// port
 																			// 8080
-				logger.info("Use listen " + this.socket.getInetAddress().toString() + ":" + this.listenPort);
+				logger.info(Labels.getLabel("browse.listening.to") + " " + this.socket.getInetAddress().toString() + ":" + this.listenPort);
 
 			}
 			catch (BindException e)
@@ -118,11 +119,11 @@ public class InternalWebServer extends AuthListner implements Runnable, Observer
 					// When user obtain a token closing listen socket cause this
 					// exception
 					// In this case this is a normal exception
-					logger.info("Closing listening socket.");
+					logger.info(Labels.getLabel("browse.listening.closed"));
 				}
 				else
 				{
-					logger.error("IOException while accepting client requests", e);
+					logger.error(Labels.getLabel("browse.listening.io_error_on_accept"), e);
 				}
 				// Close all transcation sockets
 				for (Socket transactionSocket : sockets)
@@ -136,7 +137,7 @@ public class InternalWebServer extends AuthListner implements Runnable, Observer
 					}
 					catch (IOException e1)
 					{
-						logger.error("IOException while closing client requests", e1);
+						logger.error(Labels.getLabel("browse.listening.io_error_on_close"), e1);
 					}
 				}
 				serverThread.interrupt();
@@ -155,16 +156,16 @@ public class InternalWebServer extends AuthListner implements Runnable, Observer
 			tokenResponse = AuthHelper.getTokenFromAuthCode(transaction.code, idTokenObj.getTenantId());
 			if(tokenResponse.getError() == null)
 			{
-				logger.info("User has a valid token");
+				logger.info(Labels.getLabel("token.valid"));
 
 				try
 				{
-					logger.info("Sopping listening thread");
+					logger.info(Labels.getLabel("browse.listening.stop"));
 					this.socket.close();
 				}
 				catch (IOException e)
 				{
-					logger.error("IOException durring ", e);
+					logger.error(IOException.class.getSimpleName(), e);
 				}
 				this.setChanged();
 				this.notifyObservers(tokenResponse);

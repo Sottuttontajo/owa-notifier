@@ -31,6 +31,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import info.kapable.utils.owanotifier.resource.Labels;
+
 public class LogWindowPanel extends JFrame
 {
 	public CheckboxMenuItem displayLogItem;
@@ -87,7 +89,7 @@ public class LogWindowPanel extends JFrame
 			{
 				if(displayLogItem != null)
 				{
-					displayLogItem.setLabel("Afficher les traces");
+					displayLogItem.setLabel(Labels.getLabel("Show logs"));
 					displayLogItem.setState(false);
 				}
 			}

@@ -29,6 +29,7 @@ import info.kapable.utils.owanotifier.OwaNotifier;
 import info.kapable.utils.owanotifier.desktop.SwingDesktopProxy;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
+import info.kapable.utils.owanotifier.resource.Labels;
 import info.kapable.utils.owanotifier.service.EmailAddress;
 import info.kapable.utils.owanotifier.service.Folder;
 import info.kapable.utils.owanotifier.service.Message;
@@ -59,8 +60,8 @@ public class SwingDesktopProxyTest extends TestCase
 			e.printStackTrace();
 			fail("IOException");
 		}
-		assertTrue(s.getNotification().getTitle().contains("Nouveaux Messages"));
-		assertTrue(s.getNotification().getSubtitle().contains("1 message(s) non lu"));
+		assertTrue(s.getNotification().getTitle().contains(Labels.getLabel("mail.notification.new_mail")));
+		assertTrue(s.getNotification().getSubtitle().contains(Labels.getLabel("mail.notification.not_read")));
 	}
 
 	@Test
@@ -102,8 +103,9 @@ public class SwingDesktopProxyTest extends TestCase
 	@Test
 	public void testSomeMessagesAreRead()
 	{
+		int unreadMessages = 4;
 		Folder folder = new Folder();
-		folder.setUnreadItemCount(4);
+		folder.setUnreadItemCount(unreadMessages);
 		InboxChangeEvent event = new InboxChangeEvent();
 		event.setInbox(folder);
 		event.setEventType(EventType.SOME_MESSAGES_READ);
@@ -119,7 +121,7 @@ public class SwingDesktopProxyTest extends TestCase
 			fail("IOException");
 		}
 		assertTrue(s.getNotification() != null);
-		assertTrue(s.getNotification().getSubtitle().contains("4 message(s) non lu"));
+		assertTrue(s.getNotification().getSubtitle().contains(unreadMessages + " " + Labels.getLabel("mail.notification.not_read")));
 	}
 
 

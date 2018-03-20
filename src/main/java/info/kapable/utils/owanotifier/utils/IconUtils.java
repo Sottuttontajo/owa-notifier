@@ -27,6 +27,8 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
+import info.kapable.utils.owanotifier.resource.Labels;
+
 public class IconUtils
 {
 	private IconUtils()
@@ -58,7 +60,7 @@ public class IconUtils
 		}
 		else
 		{
-			System.err.println("Couldn't find file: " + path);
+			System.err.println(Labels.getLabel("icon.error.not_found") + path);
 			return null;
 		}
 	}

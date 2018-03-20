@@ -27,6 +27,7 @@ import info.kapable.utils.owanotifier.OwaNotifier;
 import info.kapable.utils.owanotifier.auth.IdToken;
 import info.kapable.utils.owanotifier.auth.TokenResponse;
 import info.kapable.utils.owanotifier.resource.AuthProperties;
+import info.kapable.utils.owanotifier.resource.Labels;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -182,7 +183,7 @@ public class InternalWebServerTransaction extends Observable implements Runnable
 			out.close();
 			if(idToken == null)
 			{
-				logger.error("No token in return");
+				logger.error(Labels.getLabel("token.not_found"));
 				OwaNotifier.exit(5);
 			}
 			this.idTokenObj = IdToken.parseEncodedToken(idToken, expectedNonce.toString());
@@ -193,11 +194,11 @@ public class InternalWebServerTransaction extends Observable implements Runnable
 			}
 			catch (IOException e)
 			{
-				logger.error("IOException durring close socket", e);
+				logger.error(Labels.getLabel("token.error.socket_close"), e);
 			}
 			if(this.idTokenObj == null)
 			{
-				logger.error("Error retriving token");
+				logger.error(Labels.getLabel("token.error.retrieve"));
 				OwaNotifier.exit(255);
 			}
 			this.setChanged();

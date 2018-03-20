@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package info.kapable.utils.owanotifier.event;
 
+import info.kapable.utils.owanotifier.resource.Labels;
 import info.kapable.utils.owanotifier.service.EmailAddress;
 import info.kapable.utils.owanotifier.service.Folder;
 import info.kapable.utils.owanotifier.service.Message;
@@ -54,23 +55,17 @@ public class InboxChangeEvent extends ChangeEvent
 	public String getEventTitle()
 	{
 		if(this.eventType == EventType.MORE_THAN_ONE_NEW_MESSAGE)
-		{
-			return "Nouveaux Messages";
-		}
+			return Labels.getLabel("mail.notification.new_mail");
+
 		if(this.eventType == EventType.ONE_NEW_MESSAGE)
-		{
 			return this.message.getSubject();
-		}
+
 		if(this.eventType == EventType.SOME_MESSAGES_READ)
 		{
 			if(inbox.getUnreadItemCount() > 0)
-			{
-				return inbox.getUnreadItemCount() + " message(s) non lu";
-			}
+				return inbox.getUnreadItemCount() + Labels.getLabel("mail.notification.not_read");
 			else
-			{
-				return "Pas de message non lu";
-			}
+				return Labels.getLabel("mail.notification.all_read");
 		}
 		return "";
 	}
@@ -146,23 +141,17 @@ public class InboxChangeEvent extends ChangeEvent
 	public String getEventText()
 	{
 		if(this.eventType == EventType.MORE_THAN_ONE_NEW_MESSAGE)
-		{
-			return inbox.getUnreadItemCount() + " message(s) non lu";
-		}
+			return inbox.getUnreadItemCount() + " " + Labels.getLabel("mail.notification.not_read");
+
 		if(this.eventType == EventType.ONE_NEW_MESSAGE)
-		{
 			return this.message.getBodyPreview();
-		}
+		
 		if(this.eventType == EventType.SOME_MESSAGES_READ)
 		{
 			if(inbox.getUnreadItemCount() > 0)
-			{
-				return inbox.getUnreadItemCount() + " message(s) non lu";
-			}
+				return inbox.getUnreadItemCount() + " " + Labels.getLabel("mail.notification.not_read");
 			else
-			{
-				return "Pas de message non lu";
-			}
+				return Labels.getLabel("mail.notification.all_read");
 		}
 		return "";
 	}

@@ -28,6 +28,7 @@ import org.junit.Test;
 import info.kapable.utils.owanotifier.desktop.SystemDesktopProxy;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
+import info.kapable.utils.owanotifier.resource.Labels;
 import info.kapable.utils.owanotifier.service.EmailAddress;
 import info.kapable.utils.owanotifier.service.Folder;
 import info.kapable.utils.owanotifier.service.Message;
@@ -57,7 +58,7 @@ public class SystemDesktopProxyTest extends TestCase
 			fail("IOException");
 		}
 		String toolTip = s.getToolTip();
-		assertTrue(toolTip.contains("1 message(s) non lu"));
+		assertTrue(toolTip.contains("1 " + Labels.getLabel("mail.notification.not_read")));
 
 		// Test receive a new messages
 		folder.setUnreadItemCount(2);
@@ -83,7 +84,7 @@ public class SystemDesktopProxyTest extends TestCase
 			e.printStackTrace();
 			fail("IOException");
 		}
-		assertTrue(s.getToolTip().contains("2 message(s) non lu"));
+		assertTrue(s.getToolTip().contains("2 " + Labels.getLabel("mail.notification.not_read")));
 
 		// Test mark a message as read
 		folder.setUnreadItemCount(1);
@@ -99,7 +100,7 @@ public class SystemDesktopProxyTest extends TestCase
 			e.printStackTrace();
 			fail("IOException");
 		}
-		assertTrue(s.getToolTip().contains("1 message(s) non lu"));
+		assertTrue(s.getToolTip().contains("1 " + Labels.getLabel("mail.notification.not_read")));
 
 		// Test last message mark as read
 		folder.setUnreadItemCount(0);
@@ -115,7 +116,7 @@ public class SystemDesktopProxyTest extends TestCase
 			e.printStackTrace();
 			fail("IOException");
 		}
-		assertTrue(s.getToolTip().contains("Pas de message non lu"));
+		assertTrue(s.getToolTip().contains(Labels.getLabel("mail.notification.all_read")));
 	}
 
 }

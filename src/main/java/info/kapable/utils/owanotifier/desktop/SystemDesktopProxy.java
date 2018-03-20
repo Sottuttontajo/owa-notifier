@@ -51,13 +51,14 @@ import org.slf4j.LoggerFactory;
 import info.kapable.utils.owanotifier.OwaNotifier;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.resource.AuthProperties;
+import info.kapable.utils.owanotifier.resource.Labels;
 
 public class SystemDesktopProxy extends DesktopProxy
 {
 
 	private TrayIcon trayIcon;
 
-	private String toolTip = "Notification de nouveaux courriel(s)";
+	private String toolTip = Labels.getLabel("mail.notification.new_mail");
 	private Image imageWaiting;
 	private Image imageNewMail;
 	private Image imageNoMail;
@@ -99,11 +100,11 @@ public class SystemDesktopProxy extends DesktopProxy
 						catch (IOException e1)
 						{
 							e1.printStackTrace();
-							logger.error("IOException when calling browse on owaUrl", e1);
+							logger.error(Labels.getLabel("browse.io_error"), e1);
 						}
 						catch (URISyntaxException e1)
 						{
-							logger.error("URISyntaxException when calling browse on owaUrl", e1);
+							logger.error(Labels.getLabel("browse.uri_syntax_error"), e1);
 						}
 					}
 				}
@@ -165,19 +166,19 @@ public class SystemDesktopProxy extends DesktopProxy
 		final PopupMenu popup = new PopupMenu();
 
 		// Create a pop-up menu components
-		MenuItem aboutItem = new MenuItem("About");
+		MenuItem aboutItem = new MenuItem(Labels.getLabel("about"));
 		aboutItem.addActionListener(new ActionListener()
 		{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				JOptionPane.showMessageDialog(null, "Lien: https://github.com/matgou/owa-notifier", "OwaNotifier: ", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, Labels.getLabel("link") + ": https://github.com/matgou/owa-notifier", "OwaNotifier: ", JOptionPane.INFORMATION_MESSAGE);
 
 			}
 
 		});
 		// Create a pop-up menu components
-		final CheckboxMenuItem displayLogItem = new CheckboxMenuItem("Afficher les traces");
+		final CheckboxMenuItem displayLogItem = new CheckboxMenuItem(Labels.getLabel("log.show"));
 		LogWindowPanel.getInstance().displayLogItem = displayLogItem;
 
 		displayLogItem.addItemListener(new ItemListener()
@@ -188,17 +189,17 @@ public class SystemDesktopProxy extends DesktopProxy
 				if(LogWindowPanel.getInstance().isVisible())
 				{
 					LogWindowPanel.getInstance().setVisible(false);
-					displayLogItem.setLabel("Afficher les traces");
+					displayLogItem.setLabel(Labels.getLabel("log.show"));
 				}
 				else
 				{
 					LogWindowPanel.getInstance().setVisible(true);
-					displayLogItem.setLabel("Masquer les traces");
+					displayLogItem.setLabel(Labels.getLabel("log.hide"));
 				}
 			}
 		});
 		// Create a pop-up menu components
-		final CheckboxMenuItem muteLogItem = new CheckboxMenuItem("Ne plus afficher de notifications");
+		final CheckboxMenuItem muteLogItem = new CheckboxMenuItem(Labels.getLabel("notification.hide"));
 		muteLogItem.setState(OwaNotifier.isMute());
 		muteLogItem.addItemListener(new ItemListener()
 		{
@@ -215,14 +216,14 @@ public class SystemDesktopProxy extends DesktopProxy
 				}
 			}
 		});
-		MenuItem exitItem = new MenuItem("Exit");
+		MenuItem exitItem = new MenuItem(Labels.getLabel("exit"));
 		exitItem.addActionListener(new ActionListener()
 		{
 
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				logger.error("Exit Perform");
+				logger.error(Labels.getLabel("exit"));
 				OwaNotifier.exit(0);
 			}
 		});
@@ -258,15 +259,15 @@ public class SystemDesktopProxy extends DesktopProxy
 		}
 		else
 		{
-			logger.error("System tray not supported!");
+			logger.error(Labels.getLabel("system_tray.error.not_supported"));
 		}
 		if(event.getInbox().getUnreadItemCount() > 0)
 		{
-			this.setToolTip(event.getInbox().getUnreadItemCount() + " message(s) non lu");
+			this.setToolTip(event.getInbox().getUnreadItemCount() + " " + Labels.getLabel("mail.notification.not_read"));
 		}
 		else
 		{
-			this.setToolTip("Pas de message non lu");
+			this.setToolTip(Labels.getLabel("mail.notification.all_read"));
 		}
 	}
 }

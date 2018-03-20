@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import info.kapable.utils.owanotifier.OwaNotifier;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
+import info.kapable.utils.owanotifier.resource.Labels;
 
 public abstract class DesktopProxy implements Observer
 {
@@ -91,7 +92,7 @@ public abstract class DesktopProxy implements Observer
 		else
 		{
 			// browser is unsuported
-			logger.error("Desktop is unsuported");
+			logger.error(Labels.getLabel("desktop.error.unsupported"));
 			OwaNotifier.exit(1);
 		}
 	}

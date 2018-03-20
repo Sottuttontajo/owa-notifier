@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import info.kapable.utils.owanotifier.JacksonConverter;
 import info.kapable.utils.owanotifier.RestfullAcessProxy;
 import info.kapable.utils.owanotifier.resource.AuthProperties;
+import info.kapable.utils.owanotifier.resource.Labels;
 
 /**
  * Helper class to login on Microsoft using oauth2
@@ -188,7 +189,7 @@ public class AuthHelper
 	public static TokenResponse getTokenFromRefresh(TokenResponse tokens, String tenantId)
 	{
 		TokenService tokenService = RestfullAcessProxy.getTokenService(authority);
-		logger.info("Request to refresh token");
+		logger.info(Labels.getLabel("token.refreshRequest"));
 		try
 		{
 			JacksonConverter c = new JacksonConverter(new ObjectMapper());
@@ -197,7 +198,7 @@ public class AuthHelper
 		catch (IOException e)
 		{
 			TokenResponse error = new TokenResponse();
-			logger.error("IOException in refresh token : ", e);
+			logger.error(Labels.getLabel("token.refreshRequest.error"), e);
 			error.setError("IOException");
 			error.setErrorDescription(e.getMessage());
 			return error;
@@ -205,7 +206,7 @@ public class AuthHelper
 		catch (retrofit.RetrofitError e)
 		{
 			TokenResponse error = new TokenResponse();
-			logger.error("API Calling Exeption in refresh token : ", e);
+			logger.error(Labels.getLabel("token.refreshRequest.api_error"));
 			error.setError("RetrofitError");
 			error.setErrorDescription(e.getMessage());
 			return error;
@@ -234,7 +235,7 @@ public class AuthHelper
 		catch (IOException e)
 		{
 			TokenResponse error = new TokenResponse();
-			logger.error("IOException in getting inital token : ", e);
+			logger.error(Labels.getLabel("token.initalRequest.io_error"), e);
 			error.setError("IOException");
 			error.setErrorDescription(e.getMessage());
 			return error;
@@ -242,7 +243,7 @@ public class AuthHelper
 		catch (retrofit.RetrofitError e)
 		{
 			TokenResponse error = new TokenResponse();
-			logger.error("API Calling Exeption in getting inital token : ", e);
+			logger.error(Labels.getLabel("token.initalRequest.api_error"), e);
 			error.setError("RetrofitError");
 			error.setErrorDescription(e.getMessage());
 			return error;

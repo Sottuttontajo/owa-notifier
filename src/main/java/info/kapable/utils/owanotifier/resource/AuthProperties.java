@@ -10,10 +10,7 @@ public class AuthProperties extends ResourceProperties
 	{
 		return instance;
 	}
-	
-	private AuthProperties()
-	{}
-	
+		
 	public static void setProperty(String key, String value) throws IOException
 	{
 		getInstance().setOrRemoveProperty(key, value);
@@ -21,11 +18,17 @@ public class AuthProperties extends ResourceProperties
 
 	public static String getProperty(String key) throws IOException
 	{
-		return getInstance().getProperties().getProperty(key);
+		return getInstance().getResource().getProperty(key);
 	}
 
 	public static String getProperty(String key, String defaultValue) throws IOException
 	{
-		return getInstance().getProperties().getProperty(key, defaultValue);
+		return getInstance().getResource().getProperty(key, defaultValue);
+	}
+
+	@Override
+	protected String getResourcePath()
+	{
+		return "property/auth.properties";
 	}
 }

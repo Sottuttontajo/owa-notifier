@@ -23,6 +23,8 @@ SOFTWARE.
  */
 package com.notification;
 
+import java.awt.Label;
+import java.io.IOException;
 import java.util.HashMap;
 
 import javax.swing.Icon;
@@ -34,6 +36,7 @@ import com.notification.types.ProgressBarNotification;
 import com.notification.types.TextNotification;
 
 import info.kapable.utils.owanotifier.exception.NotificationException;
+import info.kapable.utils.owanotifier.resource.Labels;
 import info.kapable.utils.owanotifier.theme.TextTheme;
 import info.kapable.utils.owanotifier.theme.ThemePackage;
 import info.kapable.utils.owanotifier.theme.ThemePackagePresets;
@@ -122,11 +125,12 @@ public final class NotificationFactory
 	 * @param notificationClass
 	 *            the Class of the Notification to build
 	 * @return the built Notification
+	 * @throws IOException 
 	 */
 	public <T extends Notification> T build(Class<T> notificationClass)
 	{
 		if(!m_builders.containsKey(notificationClass))
-			throw new RuntimeException("No NotificationBuilder for: " + notificationClass);
+			throw new RuntimeException(Labels.getLabel("notification_builder.not_found") + notificationClass);
 
 		@SuppressWarnings("unchecked")
 		T note = (T) m_builders.get(notificationClass).buildNotification(m_pack, new Object[0]);
@@ -148,7 +152,7 @@ public final class NotificationFactory
 	public <T extends Notification> T build(Class<T> notificationClass, Object... args)
 	{
 		if(!m_builders.containsKey(notificationClass))
-			throw new RuntimeException("No NotificationBuilder for: " + notificationClass);
+			throw new RuntimeException(Labels.getLabel("notification_builder.not_found") + notificationClass);
 
 		@SuppressWarnings("unchecked")
 		T note = (T) m_builders.get(notificationClass).buildNotification(m_pack, args);
@@ -238,7 +242,7 @@ public final class NotificationFactory
 		public TextNotification buildNotification(ThemePackage pack, Object... args)
 		{
 			if(args.length != 2)
-				throw new NotificationException("TextNotifications need two arguments: title, subtitle!");
+				throw new NotificationException(Labels.getLabel("notification_builder.text_notifications.arguments_mismatch"));
 
 			TextNotification note = new TextNotification();
 			note.setWindowTheme(pack.getTheme(WindowTheme.class));
@@ -256,7 +260,7 @@ public final class NotificationFactory
 		public AcceptNotification buildNotification(ThemePackage pack, Object... args)
 		{
 			if(args.length != 2 && args.length != 4)
-				throw new NotificationException("AcceptNotifications need two or four arguments: title, subtitle, accept text, decline text!");
+				throw new NotificationException(Labels.getLabel("notification_builder.accept_notifications.arguments_mismatch"));
 
 			AcceptNotification note = new AcceptNotification();
 			note.setWindowTheme(pack.getTheme(WindowTheme.class));
@@ -280,7 +284,7 @@ public final class NotificationFactory
 		public IconNotification buildNotification(ThemePackage pack, Object... args)
 		{
 			if(args.length != 4)
-				throw new NotificationException("IconNotifications need three arguments: title, subtitle, icon!");
+				throw new NotificationException(Labels.getLabel("notification_builder.icon_notifications.arguments_mismatch"));
 
 			IconNotification note = new IconNotification();
 			note.setWindowTheme(pack.getTheme(WindowTheme.class));
@@ -299,7 +303,7 @@ public final class NotificationFactory
 		public ProgressBarNotification buildNotification(ThemePackage pack, Object... args)
 		{
 			if(args.length != 1)
-				throw new NotificationException("ProgressBarNotifications need one argument: title!");
+				throw new NotificationException(Labels.getLabel("notification_builder.progress_bar.arguments_mismatch"));
 
 			ProgressBarNotification note = new ProgressBarNotification();
 			note.setWindowTheme(pack.getTheme(WindowTheme.class));

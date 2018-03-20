@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.kapable.utils.owanotifier.auth.TokenService;
+import info.kapable.utils.owanotifier.resource.Labels;
 import retrofit.RetrofitError;
 import retrofit.client.Header;
 import retrofit.client.Response;
@@ -39,7 +40,7 @@ public class StubTokenService implements TokenService
 	public String url = "https://login.microsoftonline.com/1eea9cbe-243a-40b9-ba20-dc28db3933ba/oauth2/v2.0/token";
 	public int status = 200;
 	public List<Header> headers;
-	public String reason = "OK";
+	public String reason = Labels.getLabel("ok");
 	public String body;
 	private static StubTokenService stubTokenService;
 	public boolean retrofitError = false;
@@ -71,7 +72,7 @@ public class StubTokenService implements TokenService
 	{
 		if(retrofitError)
 		{
-			IOException e = new IOException("JUnit Stub");
+			IOException e = new IOException(Labels.getLabel("token.stub.io_error"));
 			throw RetrofitError.networkError(url, e);
 		}
 		return new Response(url, status, reason, headers, new TypedString(body));
@@ -80,13 +81,11 @@ public class StubTokenService implements TokenService
 	@Override
 	public Response getAccessTokenFromRefreshToken(String tenantId, String clientId, String clientSecret, String grantType, String code, String redirectUrl)
 	{
-
 		if(retrofitError)
 		{
-			IOException e = new IOException("JUnit Stub");
+			IOException e = new IOException(Labels.getLabel("token.stub.io_error"));
 			throw RetrofitError.networkError(url, e);
 		}
 		return new Response(url, status, reason, headers, new TypedString(body));
 	}
-
 }

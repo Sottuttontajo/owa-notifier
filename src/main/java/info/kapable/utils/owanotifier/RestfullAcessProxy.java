@@ -39,6 +39,7 @@ import com.github.markusbernhardt.proxy.ProxySearch;
 import com.squareup.okhttp.OkHttpClient;
 
 import info.kapable.utils.owanotifier.auth.TokenService;
+import info.kapable.utils.owanotifier.resource.Labels;
 import info.kapable.utils.owanotifier.service.OutlookService;
 import info.kapable.utils.owanotifier.teststubs.StubTokenService;
 import retrofit.RequestInterceptor;
@@ -74,7 +75,7 @@ public class RestfullAcessProxy
 		}
 		else
 		{
-			logger.debug("Use stub as TokenService");
+			logger.debug(Labels.getLabel("token.stub_mode.use_stube"));
 			return getStubTokenService();
 		}
 	}
@@ -96,7 +97,7 @@ public class RestfullAcessProxy
 	 */
 	public static InetSocketAddress findProxy()
 	{
-		logger.info("detecting proxies");
+		logger.info(Labels.getLabel("proxy.detect"));
 		ProxySearch ps = ProxySearch.getDefaultProxySearch();
 		ProxySelector myProxySelector = ps.getProxySelector();
 		ProxySelector.setDefault(myProxySelector);
@@ -104,7 +105,7 @@ public class RestfullAcessProxy
 		List<Proxy> l = null;
 		if(myProxySelector == null)
 		{
-			logger.info("No Proxy");
+			logger.info(Labels.getLabel("proxy.no_proxy"));
 			return null;
 		}
 		try
@@ -120,20 +121,20 @@ public class RestfullAcessProxy
 			for (Iterator<Proxy> iter = l.iterator(); iter.hasNext();)
 			{
 				java.net.Proxy proxy = (java.net.Proxy) iter.next();
-				logger.info("proxy type: " + proxy.type());
+				logger.info(Labels.getLabel("proxy.type") + proxy.type());
 
 				InetSocketAddress addr = (InetSocketAddress) proxy.address();
 				if(addr == null)
 				{
-					logger.info("No Proxy");
+					logger.info(Labels.getLabel("proxy.no_proxy"));
 					return null;
 				}
-				logger.info("Hostname: " + addr.getHostName());
-				logger.info("Port : " + addr.getPort());
+				logger.info(Labels.getLabel("hostname") + addr.getHostName());
+				logger.info(Labels.getLabel("port") + addr.getPort());
 				return addr;
 			}
 		}
-		logger.info("No Proxy");
+		logger.info(Labels.getLabel("proxy.no_proxy"));
 		return null;
 	}
 
