@@ -34,6 +34,7 @@ import com.notification.NotificationFactory.Location;
 import com.notification.types.IconNotification;
 
 import info.kapable.utils.owanotifier.OwaNotifier;
+import info.kapable.utils.owanotifier.event.Event;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
 import info.kapable.utils.owanotifier.notification.manager.SimpleManager;
@@ -59,7 +60,13 @@ public class SwingDesktopProxy extends DesktopProxy
 	}
 
 	@Override
-	protected void processEvent(InboxChangeEvent event) throws IOException
+	protected void processEvent(Event event) throws IOException
+	{
+		if(event instanceof InboxChangeEvent)
+			processInboxChangeEvent((InboxChangeEvent) event);
+	}
+	
+	protected void processInboxChangeEvent(InboxChangeEvent event) throws IOException
 	{
 		// If mute don't display notification
 		if(OwaNotifier.isMute())
@@ -103,6 +110,7 @@ public class SwingDesktopProxy extends DesktopProxy
 			e.printStackTrace();
 		}
 	}
+
 
 	/**
 	 * @return the notification

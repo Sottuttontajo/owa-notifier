@@ -41,6 +41,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.MessageFormat;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
@@ -49,6 +50,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.kapable.utils.owanotifier.OwaNotifier;
+import info.kapable.utils.owanotifier.event.ApplicationStateChangeEvent;
+import info.kapable.utils.owanotifier.event.Event;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.resource.AuthProperties;
 import info.kapable.utils.owanotifier.resource.Labels;
@@ -238,9 +241,16 @@ public class SystemDesktopProxy extends DesktopProxy
 	}
 
 	@Override
-	protected void processEvent(InboxChangeEvent event) throws IOException
+	protected void processEvent(Event event) throws IOException
 	{
-		// TODO Auto-generated method stub
+		if(event instanceof InboxChangeEvent)
+			processInboxChangeEvent((InboxChangeEvent) event);
+		if(event instanceof ApplicationStateChangeEvent)
+			processApplicationStateChangeEvent((ApplicationStateChangeEvent) event);
+	}
+	
+	private void processInboxChangeEvent(InboxChangeEvent event) throws IOException
+	{
 		if(SystemTray.isSupported())
 		{
 			if(event.getInbox().getUnreadItemCount() > 0)
@@ -268,6 +278,19 @@ public class SystemDesktopProxy extends DesktopProxy
 		else
 		{
 			this.setToolTip(Labels.getLabel("mail.notification.all_read"));
+		}
+	}
+	
+	private void processApplicationStateChangeEvent(ApplicationStateChangeEvent event) throws IOException
+	{
+		switch(event.getStateChange())
+		{
+			case STARTED:
+				String title = Labels.getLabel("application.started.title");
+				String text = Labels.getLabel("application.started.text");
+				int loopWaitTime = Integer.parseInt(AuthProperties.getProperty("loopWaitTime")) / 1000;
+				text = MessageFormat.format(text, loopWaitTime);
+				trayIcon.displayMessage(title, text, MessageType.INFO);
 		}
 	}
 }

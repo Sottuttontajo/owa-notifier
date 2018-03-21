@@ -29,6 +29,7 @@ import java.util.Observable;
 import org.junit.Test;
 
 import info.kapable.utils.owanotifier.desktop.DesktopProxy;
+import info.kapable.utils.owanotifier.event.Event;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
 import info.kapable.utils.owanotifier.service.Folder;
@@ -59,9 +60,9 @@ public class DesktopProxyTest extends TestCase
 		DesktopProxy c = new DesktopProxy()
 		{
 			@Override
-			protected void processEvent(InboxChangeEvent event) throws IOException
+			protected void processEvent(Event event) throws IOException
 			{
-				DesktopProxyTest.event = event;
+				DesktopProxyTest.event = (InboxChangeEvent) event;
 			};
 		};
 		Folder folder = new Folder();

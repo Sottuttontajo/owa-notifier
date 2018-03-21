@@ -20,6 +20,8 @@ import info.kapable.utils.owanotifier.auth.IdToken;
 import info.kapable.utils.owanotifier.auth.TokenResponse;
 import info.kapable.utils.owanotifier.desktop.SwingDesktopProxy;
 import info.kapable.utils.owanotifier.desktop.SystemDesktopProxy;
+import info.kapable.utils.owanotifier.event.ApplicationStateChangeEvent;
+import info.kapable.utils.owanotifier.event.ApplicationStateChangeEvent.StateChange;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
 import info.kapable.utils.owanotifier.resource.AuthProperties;
@@ -83,6 +85,11 @@ public class Boot extends Observable implements Observer
 	 */
 	public void infiniteLoop() throws JsonParseException, JsonMappingException, IOException, InterruptedException
 	{
+		setChanged();
+		ApplicationStateChangeEvent applicationStateChangeEvent = new ApplicationStateChangeEvent();
+		applicationStateChangeEvent.setStateChange(StateChange.STARTED);
+		notifyObservers(applicationStateChangeEvent);
+		
 		int lastUnreadCount = -1;
 		String folder = "inbox";
 		JacksonConverter c = new JacksonConverter(new ObjectMapper());
@@ -119,7 +126,7 @@ public class Boot extends Observable implements Observer
 
 			if(eventType != null)
 			{
-				this.setChanged();
+				setChanged();
 				InboxChangeEvent inboxChangeEvent = new InboxChangeEvent();
 				inboxChangeEvent.setInbox(inbox);
 				inboxChangeEvent.setEventType(eventType);

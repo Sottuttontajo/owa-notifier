@@ -31,7 +31,7 @@ import info.kapable.utils.owanotifier.service.Message;
 /**
  * This class store all informations to display notification
  */
-public class InboxChangeEvent extends ChangeEvent
+public class InboxChangeEvent implements Event
 {
 	public enum EventType
 	{

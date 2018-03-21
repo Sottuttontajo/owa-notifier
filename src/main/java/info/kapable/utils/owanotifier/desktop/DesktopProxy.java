@@ -25,7 +25,6 @@ package info.kapable.utils.owanotifier.desktop;
 
 import java.awt.Desktop;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Observable;
@@ -35,7 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.kapable.utils.owanotifier.OwaNotifier;
-import info.kapable.utils.owanotifier.event.InboxChangeEvent;
+import info.kapable.utils.owanotifier.event.Event;
 import info.kapable.utils.owanotifier.resource.Labels;
 
 public abstract class DesktopProxy implements Observer
@@ -56,7 +55,7 @@ public abstract class DesktopProxy implements Observer
 	 * @throws IOException
 	 *             In case of exception during event processing
 	 */
-	protected abstract void processEvent(InboxChangeEvent event) throws IOException;
+	protected abstract void processEvent(Event event) throws IOException;
 
 	/**
 	 * Static method to start browser redirect user to url
@@ -89,10 +88,9 @@ public abstract class DesktopProxy implements Observer
 	@Override
 	public void update(Observable o, Object arg)
 	{
-		InboxChangeEvent event = (InboxChangeEvent) arg;
 		try
 		{
-			this.processEvent(event);
+			this.processEvent((Event) arg);
 		}
 		catch (IOException e1)
 		{
