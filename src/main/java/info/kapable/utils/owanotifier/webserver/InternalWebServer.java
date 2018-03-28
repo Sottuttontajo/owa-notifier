@@ -157,16 +157,6 @@ public class InternalWebServer extends AuthListner implements Runnable, Observer
 			if(tokenResponse.getError() == null)
 			{
 				logger.info(Labels.getLabel("token.valid"));
-
-				try
-				{
-					logger.info(Labels.getLabel("browse.listening.stop"));
-					this.socket.close();
-				}
-				catch (IOException e)
-				{
-					logger.error(IOException.class.getSimpleName(), e);
-				}
 				this.setChanged();
 				this.notifyObservers(tokenResponse);
 			}
