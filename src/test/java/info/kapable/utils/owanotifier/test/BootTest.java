@@ -39,7 +39,7 @@ public class BootTest extends TestCase
 	
 	public void errorOnBoot()
 	{
-		Boot boot = new Boot(null);
+		Boot boot = new Boot();
 
 		LoginHandler loginHandler = new LoginHandler(null)
 		{
@@ -57,7 +57,7 @@ public class BootTest extends TestCase
 
 	public void errorOnUpdate() throws IOException
 	{
-		Boot boot = new Boot(null)
+		Boot boot = new Boot()
 		{
 			@Override
 			public void infiniteLoop() throws JsonParseException, JsonMappingException, IOException, InterruptedException
@@ -101,7 +101,7 @@ public class BootTest extends TestCase
 	{
 		public BootUpdateMock(File lock)
 		{
-			super(null);
+			super();
 		}
 		
 		@Override

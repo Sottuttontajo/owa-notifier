@@ -1,7 +1,5 @@
 package info.kapable.utils.owanotifier;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.NoRouteToHostException;
 import java.text.MessageFormat;
@@ -44,12 +42,6 @@ public class Boot extends Observable implements Observer
 	// A public object to store auth
 	public TokenResponse tokenResponse;
 	private IdToken idToken;
-	private File lock;
-
-	public Boot(File lock)
-	{
-		this.lock = lock;
-	}
 
 	public void boot()
 	{
@@ -104,7 +96,6 @@ public class Boot extends Observable implements Observer
 		while (true)
 		{
 			Calendar now = Calendar.getInstance();
-			updateLock();
 
 			// If token is expired refresh token
 			if(tokenResponse.getExpirationTime().before(now.getTime()))
@@ -164,29 +155,6 @@ public class Boot extends Observable implements Observer
 			logger.debug("max memory: " + format.format(maxMemory / 1024));
 			logger.debug("total free memory: " + format.format((freeMemory + (maxMemory - allocatedMemory)) / 1024));
 		}
-	}
-
-	/**
-	 * Update lock file
-	 * 
-	 * @throws IOException
-	 */
-	private void updateLock() throws IOException
-	{
-		logger.debug(Labels.getLabel("lock.update"));
-		FileWriter writer = new FileWriter(lock);
-		writer.write(System.currentTimeMillis() + "");
-		writer.close();
-	}
-
-	public File getLock()
-	{
-		return lock;
-	}
-
-	public void setLock(File lock)
-	{
-		this.lock = lock;
 	}
 
 	@Override

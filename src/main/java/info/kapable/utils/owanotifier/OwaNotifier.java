@@ -23,10 +23,7 @@ SOFTWARE.
  */
 package info.kapable.utils.owanotifier;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.prefs.Preferences;
 
 import org.slf4j.Logger;
@@ -34,9 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import info.kapable.utils.owanotifier.desktop.LogWindowPanel;
 import info.kapable.utils.owanotifier.exception.SwingExceptionViewer;
-import info.kapable.utils.owanotifier.resource.AuthProperties;
 import info.kapable.utils.owanotifier.resource.Labels;
-import info.kapable.utils.owanotifier.utils.Browser;
 
 /**
  * OwaNotifier main class - Load config - start oauth2 client daemon - main loop
@@ -132,45 +127,8 @@ public class OwaNotifier
 
 		owanotifier = getInstance();
 		LogWindowPanel.getInstance();
-		// Check if lock exist
-		String tmp = System.getProperty("java.io.tmpdir");
-		File lock = new File(tmp, "owanotifier.lock");
-		if(lock.isFile())
-		{
-			long lm = lock.lastModified();
-			logger.info(Labels.getLabel("time.lock") + lm);
-			logger.info(Labels.getLabel("time.system") + System.currentTimeMillis());
-			// If lock is not update
-			int checkInboxOnIdleTime = Integer.parseInt(AuthProperties.getProperty("checkInboxOnIdleTime"));
-			if((System.currentTimeMillis() - lm) < (checkInboxOnIdleTime * 2))
-			{
-				logger.info(Labels.getLabel("time.lock") + " < " + (checkInboxOnIdleTime * 2) + " => " + Labels.getLabel("exit.0"));
-				owanotifier.redirectUserToWebMail();
-				exit(0);
-			}
-		}
-		Boot boot = new Boot(lock);
+		Boot boot = new Boot();
 		boot.boot();
-	}
-
-	/**
-	 * @throws MalformedURLException
-	 * 
-	 */
-	private void redirectUserToWebMail() throws MalformedURLException
-	{
-		try
-		{
-			Browser.browse(AuthProperties.getProperty("owaUrl"));
-		}
-		catch(IOException e)
-		{
-			OwaNotifier.handleError("browse.io_error", e);
-		}
-		catch (URISyntaxException e)
-		{
-			OwaNotifier.handleError("browse.io_error", e);
-		}
 	}
 
 	/**
