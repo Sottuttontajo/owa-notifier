@@ -32,11 +32,11 @@ import java.util.prefs.Preferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.kapable.utils.owanotifier.desktop.DesktopProxy;
 import info.kapable.utils.owanotifier.desktop.LogWindowPanel;
 import info.kapable.utils.owanotifier.exception.SwingExceptionViewer;
 import info.kapable.utils.owanotifier.resource.AuthProperties;
 import info.kapable.utils.owanotifier.resource.Labels;
+import info.kapable.utils.owanotifier.utils.Browser;
 
 /**
  * OwaNotifier main class - Load config - start oauth2 client daemon - main loop
@@ -141,10 +141,10 @@ public class OwaNotifier
 			logger.info(Labels.getLabel("time.lock") + lm);
 			logger.info(Labels.getLabel("time.system") + System.currentTimeMillis());
 			// If lock is not update
-			int loopWaitTime = Integer.parseInt(AuthProperties.getProperty("loopWaitTime"));
-			if((System.currentTimeMillis() - lm) < (loopWaitTime * 2))
+			int checkInboxOnIdleTime = Integer.parseInt(AuthProperties.getProperty("checkInboxOnIdleTime"));
+			if((System.currentTimeMillis() - lm) < (checkInboxOnIdleTime * 2))
 			{
-				logger.info(Labels.getLabel("time.lock") + " < " + (loopWaitTime * 2) + " => " + Labels.getLabel("exit.0"));
+				logger.info(Labels.getLabel("time.lock") + " < " + (checkInboxOnIdleTime * 2) + " => " + Labels.getLabel("exit.0"));
 				owanotifier.redirectUserToWebMail();
 				exit(0);
 			}
@@ -161,7 +161,7 @@ public class OwaNotifier
 	{
 		try
 		{
-			DesktopProxy.browse(AuthProperties.getProperty("owaUrl"));
+			Browser.browse(AuthProperties.getProperty("owaUrl"));
 		}
 		catch(IOException e)
 		{

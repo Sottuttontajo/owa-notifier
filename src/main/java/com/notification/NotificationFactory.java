@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package com.notification;
 
-import java.awt.Label;
 import java.io.IOException;
 import java.util.HashMap;
 

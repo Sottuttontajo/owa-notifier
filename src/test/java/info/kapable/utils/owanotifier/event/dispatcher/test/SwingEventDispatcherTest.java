@@ -21,14 +21,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package info.kapable.utils.owanotifier.desktop.test;
+package info.kapable.utils.owanotifier.event.dispatcher.test;
 
 import org.junit.Test;
 
 import info.kapable.utils.owanotifier.OwaNotifier;
-import info.kapable.utils.owanotifier.desktop.SwingDesktopProxy;
+import info.kapable.utils.owanotifier.event.ConnectionEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
+import info.kapable.utils.owanotifier.event.dispatcher.SwingEventDispatcher;
 import info.kapable.utils.owanotifier.resource.Labels;
 import info.kapable.utils.owanotifier.service.EmailAddress;
 import info.kapable.utils.owanotifier.service.Folder;
@@ -36,13 +37,13 @@ import info.kapable.utils.owanotifier.service.Message;
 import info.kapable.utils.owanotifier.service.Recipient;
 import junit.framework.TestCase;
 
-public class SwingDesktopProxyTest extends TestCase
+public class SwingEventDispatcherTest extends TestCase
 {
 
 	@Test
 	public void testReceiveMoreThanOneNewMessage()
 	{
-		SwingDesktopProxy s = new SwingDesktopProxy();
+		SwingEventDispatcher s = new SwingEventDispatcher();
 		OwaNotifier.setMute(false);
 		// Initial Notification
 		Folder folder = new Folder();
@@ -60,8 +61,8 @@ public class SwingDesktopProxyTest extends TestCase
 			e.printStackTrace();
 			fail("IOException");
 		}
-		assertTrue(s.getNotification().getTitle().contains(Labels.getLabel("mail.notification.new_mail")));
-		assertTrue(s.getNotification().getSubtitle().contains(Labels.getLabel("mail.notification.not_read")));
+		assertTrue(s.getInboxChangeNotification().getTitle().contains(Labels.getLabel("mail.notification.new_mail")));
+		assertTrue(s.getInboxChangeNotification().getSubtitle().contains(Labels.getLabel("mail.notification.not_read")));
 	}
 
 	@Test
@@ -83,7 +84,7 @@ public class SwingDesktopProxyTest extends TestCase
 		event.setEventType(EventType.ONE_NEW_MESSAGE);
 		event.setMessage(message);
 
-		SwingDesktopProxy s = new SwingDesktopProxy();
+		SwingEventDispatcher s = new SwingEventDispatcher();
 		try
 		{
 			s.update(null, event);
@@ -93,11 +94,11 @@ public class SwingDesktopProxyTest extends TestCase
 			e.printStackTrace();
 			fail("IOException");
 		}
-		assertTrue(s.getNotification() != null);
-		assertTrue(s.getNotification().getTitle().contains("Subject de Junit"));
-		assertTrue(s.getNotification().getSubtitle().contains("BodyPreview de testUnitaire"));
-		assertTrue(s.getNotification().getFrom().contains("De: Foo Bar"));
-		assertTrue(s.getNotification().getFrom().contains("foo@bar.com"));
+		assertTrue(s.getInboxChangeNotification() != null);
+		assertTrue(s.getInboxChangeNotification().getTitle().contains("Subject de Junit"));
+		assertTrue(s.getInboxChangeNotification().getSubtitle().contains("BodyPreview de testUnitaire"));
+		assertTrue(s.getInboxChangeNotification().getFrom().contains("From: Foo Bar"));
+		assertTrue(s.getInboxChangeNotification().getFrom().contains("foo@bar.com"));
 	}
 
 	@Test
@@ -110,7 +111,7 @@ public class SwingDesktopProxyTest extends TestCase
 		event.setInbox(folder);
 		event.setEventType(EventType.SOME_MESSAGES_READ);
 
-		SwingDesktopProxy s = new SwingDesktopProxy();
+		SwingEventDispatcher s = new SwingEventDispatcher();
 		try
 		{
 			s.update(null, event);
@@ -120,13 +121,13 @@ public class SwingDesktopProxyTest extends TestCase
 			e.printStackTrace();
 			fail("IOException");
 		}
-		assertTrue(s.getNotification() != null);
-		assertTrue(s.getNotification().getSubtitle().contains(unreadMessages + " " + Labels.getLabel("mail.notification.not_read")));
+		assertTrue(s.getInboxChangeNotification() != null);
+		assertTrue(s.getInboxChangeNotification().getSubtitle().contains(unreadMessages + " " + Labels.getLabel("mail.notification.not_read")));
 	}
 
 
 	@Test
-	public void allMessagesAreRead()
+	public void testAllMessagesAreRead()
 	{
 		Folder folder = new Folder();
 		folder.setUnreadItemCount(0);
@@ -134,7 +135,7 @@ public class SwingDesktopProxyTest extends TestCase
 		event.setInbox(folder);
 		event.setEventType(EventType.SOME_MESSAGES_READ);
 
-		SwingDesktopProxy s = new SwingDesktopProxy();
+		SwingEventDispatcher s = new SwingEventDispatcher();
 		try
 		{
 			s.update(null, event);
@@ -144,6 +145,58 @@ public class SwingDesktopProxyTest extends TestCase
 			e.printStackTrace();
 			fail("IOException");
 		}
-		assertTrue(s.getNotification() == null);
+		assertTrue(s.getInboxChangeNotification() == null);
+	}
+
+	@Test
+	public void testConnectionLost()
+	{
+		String title = "Connection";
+		String text = "lost";
+
+		ConnectionEvent event = new ConnectionEvent();
+		event.setConnected(false);
+		event.setTitle(title);
+		event.setText(text);
+
+		SwingEventDispatcher s = new SwingEventDispatcher();
+		try
+		{
+			s.update(null, event);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail("IOException");
+		}
+		assertTrue(s.getConnectionNotification() != null);
+		assertEquals(title, s.getConnectionNotification().getTitle());
+		assertEquals(text, s.getConnectionNotification().getSubtitle());
+	}
+
+	@Test
+	public void testConnectionResumed()
+	{
+		String title = "Connection lost";
+		String text = "is resumed";
+
+		ConnectionEvent event = new ConnectionEvent();
+		event.setConnected(true);
+		event.setTitle(title);
+		event.setText(text);
+
+		SwingEventDispatcher s = new SwingEventDispatcher();
+		try
+		{
+			s.update(null, event);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			fail("IOException");
+		}
+		assertTrue(s.getConnectionNotification() != null);
+		assertEquals(title, s.getConnectionNotification().getTitle());
+		assertEquals(text, s.getConnectionNotification().getSubtitle());
 	}
 }

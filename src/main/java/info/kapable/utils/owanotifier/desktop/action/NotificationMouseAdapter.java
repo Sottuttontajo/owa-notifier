@@ -29,7 +29,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 
 import info.kapable.utils.owanotifier.OwaNotifier;
-import info.kapable.utils.owanotifier.desktop.DesktopProxy;
+import info.kapable.utils.owanotifier.utils.Browser;
 
 public class NotificationMouseAdapter extends MouseAdapter
 {
@@ -58,7 +58,7 @@ public class NotificationMouseAdapter extends MouseAdapter
 	{
 		try
 		{
-			DesktopProxy.browse("https://outlook.office.com/owa/");
+			Browser.browse("https://outlook.office.com/owa/");
 		}
 		catch(Throwable t)
 		{

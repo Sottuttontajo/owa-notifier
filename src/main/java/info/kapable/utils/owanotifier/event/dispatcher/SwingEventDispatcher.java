@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package info.kapable.utils.owanotifier.desktop;
+package info.kapable.utils.owanotifier.event.dispatcher;
 
 import java.awt.Image;
 import java.io.IOException;
@@ -34,7 +34,7 @@ import com.notification.NotificationFactory.Location;
 import com.notification.types.IconNotification;
 
 import info.kapable.utils.owanotifier.OwaNotifier;
-import info.kapable.utils.owanotifier.event.Event;
+import info.kapable.utils.owanotifier.event.ConnectionEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
 import info.kapable.utils.owanotifier.notification.manager.SimpleManager;
@@ -42,12 +42,13 @@ import info.kapable.utils.owanotifier.resource.AuthProperties;
 import info.kapable.utils.owanotifier.theme.ThemePackagePresets;
 import info.kapable.utils.owanotifier.utils.Time;
 
-public class SwingDesktopProxy extends DesktopProxy
+public class SwingEventDispatcher extends DesktopEventDispatcher
 {
-	IconNotification notification;
+	IconNotification inboxChangeNotification;
+	IconNotification connectionNotification;
 	private Image icon;
 
-	public SwingDesktopProxy()
+	public SwingEventDispatcher()
 	{
 		try
 		{
@@ -57,13 +58,6 @@ public class SwingDesktopProxy extends DesktopProxy
 		{
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	protected void processEvent(Event event) throws IOException
-	{
-		if(event instanceof InboxChangeEvent)
-			processInboxChangeEvent((InboxChangeEvent) event);
 	}
 	
 	protected void processInboxChangeEvent(InboxChangeEvent event) throws IOException
@@ -75,17 +69,17 @@ public class SwingDesktopProxy extends DesktopProxy
 		SimpleManager fade = new SimpleManager(Location.SOUTHEAST);
 		NotificationFactory factory = new NotificationFactory(ThemePackagePresets.cleanLight());
 
-		IconNotification oldNotification = notification;
+		IconNotification oldNotification = inboxChangeNotification;
 		// The notification window :
 		if(event.getEventType() == EventType.ONE_NEW_MESSAGE)
-			notification = factory.buildIconNotification("De: " + event.getEventFrom(), event.getEventTitle(), event.getEventText(), new ImageIcon(this.icon.getScaledInstance(50, 50, Image.SCALE_DEFAULT)));
+			inboxChangeNotification = factory.buildIconNotification("From: " + event.getEventFrom(), event.getEventTitle(), event.getEventText(), new ImageIcon(this.icon.getScaledInstance(50, 50, Image.SCALE_DEFAULT)));
 		else if(event.getEventType() == EventType.MORE_THAN_ONE_NEW_MESSAGE)
-			notification = factory.buildIconNotification(null, event.getEventTitle(), event.getEventText(), new ImageIcon(this.icon.getScaledInstance(50, 50, Image.SCALE_DEFAULT)));
+			inboxChangeNotification = factory.buildIconNotification(null, event.getEventTitle(), event.getEventText(), new ImageIcon(this.icon.getScaledInstance(50, 50, Image.SCALE_DEFAULT)));
 		else if(event.getEventType() == EventType.SOME_MESSAGES_READ && event.getInbox().getUnreadItemCount() > 0)
-			notification = factory.buildIconNotification(null, event.getEventTitle(), event.getEventText(), new ImageIcon(this.icon.getScaledInstance(50, 50, Image.SCALE_DEFAULT)));
-		else if(notification != null && notification.isShown() && event.getInbox().getUnreadItemCount() == 0)
+			inboxChangeNotification = factory.buildIconNotification(null, event.getEventTitle(), event.getEventText(), new ImageIcon(this.icon.getScaledInstance(50, 50, Image.SCALE_DEFAULT)));
+		else if(inboxChangeNotification != null && inboxChangeNotification.isShown() && event.getInbox().getUnreadItemCount() == 0)
 		{
-			notification.removeFromManager();
+			inboxChangeNotification.removeFromManager();
 			return;
 		}
 		else
@@ -97,7 +91,7 @@ public class SwingDesktopProxy extends DesktopProxy
 			String disappearAfterFadeTimeString = AuthProperties.getProperty("disappear_after_fade_time");
 			boolean disappearAfterFadeTime = Boolean.parseBoolean(disappearAfterFadeTimeString);
 			Time time = disappearAfterFadeTime ? Time.seconds(Integer.parseInt(AuthProperties.getProperty("notification.fade_time"))) : Time.infinite();
-			fade.addNotification(notification, time);
+			fade.addNotification(inboxChangeNotification, time);
 			if(oldNotification != null)
 				oldNotification.removeFromManager();
 		}
@@ -111,21 +105,56 @@ public class SwingDesktopProxy extends DesktopProxy
 		}
 	}
 
+	protected void processConnectionEvent(ConnectionEvent event)
+	{
+		NotificationFactory factory = new NotificationFactory(ThemePackagePresets.cleanDark());
+
+		IconNotification oldNotification = connectionNotification;
+		connectionNotification = factory.buildIconNotification(null, event.getTitle(), event.getText(), new ImageIcon(this.icon.getScaledInstance(50, 50, Image.SCALE_DEFAULT)));
+
+		try
+		{
+			Time time = event.isConnected()? Time.seconds(Integer.parseInt(AuthProperties.getProperty("notification.fade_time"))) : Time.infinite();
+			SimpleManager fade = new SimpleManager(Location.SOUTHEAST);
+			fade.addNotification(connectionNotification, time);
+			if(oldNotification != null)
+				oldNotification.removeFromManager();
+			
+		}
+		catch (NumberFormatException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * @return the notification
 	 */
-	public IconNotification getNotification()
+	public IconNotification getInboxChangeNotification()
 	{
-		return notification;
+		return inboxChangeNotification;
 	}
 
 	/**
 	 * @param notification
 	 *            the notification to set
 	 */
-	public void setNotification(IconNotification notification)
+	public void setInboxChangeNotification(IconNotification inboxChangeNotification)
 	{
-		this.notification = notification;
+		this.inboxChangeNotification = inboxChangeNotification;
+	}
+
+	public IconNotification getConnectionNotification()
+	{
+		return connectionNotification;
+	}
+
+	public void setConnectionNotification(IconNotification connectionNotification)
+	{
+		this.connectionNotification = connectionNotification;
 	}
 }

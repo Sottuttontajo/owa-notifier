@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 
 import info.kapable.utils.owanotifier.auth.AuthHelper;
 import info.kapable.utils.owanotifier.auth.AuthListner;
-import info.kapable.utils.owanotifier.desktop.DesktopProxy;
 import info.kapable.utils.owanotifier.resource.AuthProperties;
 import info.kapable.utils.owanotifier.resource.Labels;
+import info.kapable.utils.owanotifier.utils.Browser;
 import info.kapable.utils.owanotifier.webserver.InternalWebServer;
 
 public class LoginHandler
@@ -45,7 +45,7 @@ public class LoginHandler
 			logger.info(Labels.getLabel("login.redirect") + loginUrl);
 			try
 			{
-				DesktopProxy.browse(loginUrl);
+				Browser.browse(loginUrl);
 			}
 			catch (MalformedURLException e)
 			{

@@ -3,6 +3,8 @@ package info.kapable.utils.owanotifier;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.NoRouteToHostException;
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Observable;
@@ -18,12 +20,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import info.kapable.utils.owanotifier.auth.AuthHelper;
 import info.kapable.utils.owanotifier.auth.IdToken;
 import info.kapable.utils.owanotifier.auth.TokenResponse;
-import info.kapable.utils.owanotifier.desktop.SwingDesktopProxy;
-import info.kapable.utils.owanotifier.desktop.SystemDesktopProxy;
 import info.kapable.utils.owanotifier.event.ApplicationStateChangeEvent;
 import info.kapable.utils.owanotifier.event.ApplicationStateChangeEvent.StateChange;
+import info.kapable.utils.owanotifier.event.ConnectionEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
+import info.kapable.utils.owanotifier.event.dispatcher.SwingEventDispatcher;
+import info.kapable.utils.owanotifier.event.dispatcher.SystemEventDispatcher;
 import info.kapable.utils.owanotifier.resource.AuthProperties;
 import info.kapable.utils.owanotifier.resource.Labels;
 import info.kapable.utils.owanotifier.service.Folder;
@@ -32,6 +35,7 @@ import info.kapable.utils.owanotifier.service.MessageCollection;
 import info.kapable.utils.owanotifier.service.OutlookService;
 import info.kapable.utils.owanotifier.service.OutlookServiceBuilder;
 import info.kapable.utils.owanotifier.webserver.InternalWebServer;
+import retrofit.RetrofitError;
 
 public class Boot extends Observable implements Observer
 {
@@ -55,8 +59,8 @@ public class Boot extends Observable implements Observer
 
 			// Add different notification observer
 			//
-			addObserver(new SystemDesktopProxy());
-			addObserver(new SwingDesktopProxy());
+			addObserver(new SystemEventDispatcher());
+			addObserver(new SwingEventDispatcher());
 
 			// Load token from oauth2 process
 			// Display login page
@@ -91,14 +95,14 @@ public class Boot extends Observable implements Observer
 		notifyObservers(applicationStateChangeEvent);
 		
 		int lastUnreadCount = -1;
-		String folder = "inbox";
+		String folderName = "inbox";
 		JacksonConverter c = new JacksonConverter(new ObjectMapper());
 		OutlookService outlookService = OutlookServiceBuilder.getOutlookService(tokenResponse.getAccessToken(), null);
 
-		int loopWaitTime = Integer.parseInt(AuthProperties.getProperty("loopWaitTime"));
+		int checkInboxOnIdleTime = Integer.parseInt(AuthProperties.getProperty("checkInboxOnIdleTime"));
 		while (true)
 		{
-			Thread.sleep(loopWaitTime);
+			Thread.sleep(checkInboxOnIdleTime);
 			Calendar now = Calendar.getInstance();
 			updateLock();
 
@@ -106,11 +110,14 @@ public class Boot extends Observable implements Observer
 			if(tokenResponse.getExpirationTime().before(now.getTime()))
 			{
 				logger.info(Labels.getLabel("token.refresh"));
-				tokenResponse = AuthHelper.getTokenFromRefresh(tokenResponse, idToken.getTenantId());
-				outlookService = OutlookServiceBuilder.getOutlookService(tokenResponse.getAccessToken(), null);
+				TokenResponse tokenResponse = AuthHelper.getTokenFromRefresh(this.tokenResponse, idToken.getTenantId());
+				if(tokenResponse.getError() == null)
+				{
+					this.tokenResponse = tokenResponse;
+					outlookService = OutlookServiceBuilder.getOutlookService(this.tokenResponse.getAccessToken(), null);
+				}
 			}
-			// Retrieve messages from the inbox
-			Folder inbox = (Folder) c.fromBody(outlookService.getFolder(folder).getBody(), Folder.class);
+			Folder inbox = getInbox(c, outlookService, folderName);
 			logger.info(Labels.getLabel("notification.new_unread_item_count") + inbox.getUnreadItemCount());
 
 			EventType eventType = null;
@@ -240,5 +247,55 @@ public class Boot extends Observable implements Observer
 	public void setLoginHandler(LoginHandler loginHandler)
 	{
 		this.loginHandler = loginHandler;
+	}
+	
+	private Folder getInbox(JacksonConverter c, OutlookService outlookService, String folderName) throws JsonParseException, JsonMappingException, IOException, InterruptedException
+	{
+		boolean connected = true;
+		int reconnectWaitTime = Integer.parseInt(AuthProperties.getProperty("reconnectWaitTime"));
+		
+		// Retrieve messages from the inbox
+		Folder inbox = null;
+		do
+		{
+			try
+			{
+				inbox = (Folder) c.fromBody(outlookService.getFolder(folderName).getBody(), Folder.class);
+			}
+			catch(RetrofitError e)
+			{
+				if(e.getCause() instanceof NoRouteToHostException)
+					if(connected)
+					{
+						String title = Labels.getLabel("notification.connection_lost.title");
+						String text = MessageFormat.format(Labels.getLabel("notification.connection_lost.text"), reconnectWaitTime / 1000);
+						logger.info(title + ": " + text);
+						setChanged();
+						ConnectionEvent connectionEvent = new ConnectionEvent();
+						connectionEvent.setConnected(false);
+						connectionEvent.setTitle(title);
+						connectionEvent.setText(text);
+						this.notifyObservers(connectionEvent);
+						connected = false;
+					}
+				Thread.sleep(reconnectWaitTime);
+			}
+		}
+		while(inbox == null);
+		
+		if(!connected)
+		{
+			String title = Labels.getLabel("notification.connection_resumed.title");
+			String text = MessageFormat.format(Labels.getLabel("notification.connection_resumed.text"), reconnectWaitTime / 1000);
+			logger.info(title + ": " + text);
+			setChanged();
+			ConnectionEvent connectionEvent = new ConnectionEvent();
+			connectionEvent.setConnected(true);
+			connectionEvent.setTitle(title);
+			connectionEvent.setText(text);
+			this.notifyObservers(connectionEvent);
+		}
+		
+		return inbox;
 	}
 }

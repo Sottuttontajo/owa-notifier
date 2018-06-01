@@ -21,21 +21,22 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package info.kapable.utils.owanotifier.desktop.test;
+package info.kapable.utils.owanotifier.event.dispatcher.test;
 
 import java.io.IOException;
 import java.util.Observable;
 
 import org.junit.Test;
 
-import info.kapable.utils.owanotifier.desktop.DesktopProxy;
 import info.kapable.utils.owanotifier.event.Event;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
+import info.kapable.utils.owanotifier.event.dispatcher.EventDispatcher;
 import info.kapable.utils.owanotifier.service.Folder;
+import info.kapable.utils.owanotifier.utils.Browser;
 import junit.framework.TestCase;
 
-public class DesktopProxyTest extends TestCase
+public class EventDispatcherTest extends TestCase
 {
 	public static InboxChangeEvent event;
 
@@ -44,7 +45,7 @@ public class DesktopProxyTest extends TestCase
 	{
 		try
 		{
-			DesktopProxy.browse("http://www.google.com");
+			Browser.browse("http://www.google.com");
 		}
 		catch (Exception e)
 		{
@@ -57,12 +58,12 @@ public class DesktopProxyTest extends TestCase
 	@Test
 	public void testEventPocess()
 	{
-		DesktopProxy c = new DesktopProxy()
+		EventDispatcher c = new EventDispatcher()
 		{
 			@Override
 			protected void processEvent(Event event) throws IOException
 			{
-				DesktopProxyTest.event = (InboxChangeEvent) event;
+				EventDispatcherTest.event = (InboxChangeEvent) event;
 			};
 		};
 		Folder folder = new Folder();
@@ -72,7 +73,7 @@ public class DesktopProxyTest extends TestCase
 		inboxChangeEvent.setEventType(EventType.MORE_THAN_ONE_NEW_MESSAGE);
 
 		c.update(new Observable(), inboxChangeEvent);
-		assertTrue(DesktopProxyTest.event.getEventTitle().contains(inboxChangeEvent.getEventTitle()));
+		assertTrue(EventDispatcherTest.event.getEventTitle().contains(inboxChangeEvent.getEventTitle()));
 	}
 
 }

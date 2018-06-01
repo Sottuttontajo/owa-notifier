@@ -21,13 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package info.kapable.utils.owanotifier.desktop.test;
+package info.kapable.utils.owanotifier.event.dispatcher.test;
 
 import org.junit.Test;
 
-import info.kapable.utils.owanotifier.desktop.SystemDesktopProxy;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
+import info.kapable.utils.owanotifier.event.dispatcher.SystemEventDispatcher;
 import info.kapable.utils.owanotifier.resource.Labels;
 import info.kapable.utils.owanotifier.service.EmailAddress;
 import info.kapable.utils.owanotifier.service.Folder;
@@ -35,13 +35,13 @@ import info.kapable.utils.owanotifier.service.Message;
 import info.kapable.utils.owanotifier.service.Recipient;
 import junit.framework.TestCase;
 
-public class SystemDesktopProxyTest extends TestCase
+public class SystemEventDispatcherTest extends TestCase
 {
 
 	@Test
 	public void test()
 	{
-		SystemDesktopProxy s = new SystemDesktopProxy();
+		SystemEventDispatcher s = new SystemEventDispatcher();
 		// Initial Notification
 		Folder folder = new Folder();
 		folder.setUnreadItemCount(1);

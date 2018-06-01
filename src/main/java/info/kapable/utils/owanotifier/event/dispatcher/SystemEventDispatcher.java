@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package info.kapable.utils.owanotifier.desktop;
+package info.kapable.utils.owanotifier.event.dispatcher;
 
 import java.awt.AWTException;
 import java.awt.CheckboxMenuItem;
@@ -50,13 +50,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.kapable.utils.owanotifier.OwaNotifier;
+import info.kapable.utils.owanotifier.desktop.LogWindowPanel;
 import info.kapable.utils.owanotifier.event.ApplicationStateChangeEvent;
+import info.kapable.utils.owanotifier.event.ConnectionEvent;
 import info.kapable.utils.owanotifier.event.Event;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.resource.AuthProperties;
 import info.kapable.utils.owanotifier.resource.Labels;
 
-public class SystemDesktopProxy extends DesktopProxy
+public class SystemEventDispatcher extends DesktopEventDispatcher
 {
 
 	private TrayIcon trayIcon;
@@ -67,12 +69,12 @@ public class SystemDesktopProxy extends DesktopProxy
 	private Image imageNoMail;
 
 	// The logger
-	private static Logger logger = LoggerFactory.getLogger(SystemDesktopProxy.class);
+	private static Logger logger = LoggerFactory.getLogger(SystemEventDispatcher.class);
 
 	/**
 	 * On build load icon.png
 	 */
-	public SystemDesktopProxy()
+	public SystemEventDispatcher()
 	{
 		super();
 
@@ -249,7 +251,7 @@ public class SystemDesktopProxy extends DesktopProxy
 			processApplicationStateChangeEvent((ApplicationStateChangeEvent) event);
 	}
 	
-	private void processInboxChangeEvent(InboxChangeEvent event) throws IOException
+	protected void processInboxChangeEvent(InboxChangeEvent event) throws IOException
 	{
 		if(SystemTray.isSupported())
 		{
@@ -288,9 +290,13 @@ public class SystemDesktopProxy extends DesktopProxy
 			case STARTED:
 				String title = Labels.getLabel("application.started.title");
 				String text = Labels.getLabel("application.started.text");
-				int loopWaitTime = Integer.parseInt(AuthProperties.getProperty("loopWaitTime")) / 1000;
-				text = MessageFormat.format(text, loopWaitTime);
+				int checkInboxOnIdleTime = Integer.parseInt(AuthProperties.getProperty("checkInboxOnIdleTime")) / 1000;
+				text = MessageFormat.format(text, checkInboxOnIdleTime);
 				trayIcon.displayMessage(title, text, MessageType.INFO);
 		}
 	}
+
+	@Override
+	protected void processConnectionEvent(ConnectionEvent event)
+	{}
 }

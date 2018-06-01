@@ -69,7 +69,6 @@ public class BootTest extends TestCase
 		internalWebServer.tokenResponse = new TokenResponse();
 		boot.update(internalWebServer, null);
 		assertTrue(swingExceptionViewer.isErrorShown());
-		
 	}
 
 	class SwingExceptionViewerMock extends SwingExceptionViewer
