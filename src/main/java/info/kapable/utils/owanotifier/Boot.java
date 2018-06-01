@@ -100,9 +100,9 @@ public class Boot extends Observable implements Observer
 		OutlookService outlookService = OutlookServiceBuilder.getOutlookService(tokenResponse.getAccessToken(), null);
 
 		int checkInboxOnIdleTime = Integer.parseInt(AuthProperties.getProperty("checkInboxOnIdleTime"));
+		int checkInboxOnNewMessagesTime = Integer.parseInt(AuthProperties.getProperty("checkInboxOnNewMessagesTime"));
 		while (true)
 		{
-			Thread.sleep(checkInboxOnIdleTime);
 			Calendar now = Calendar.getInstance();
 			updateLock();
 
@@ -122,7 +122,7 @@ public class Boot extends Observable implements Observer
 
 			EventType eventType = null;
 
-			if(lastUnreadCount <= 0)
+			if(inbox.getUnreadItemCount() <= 0)
 				eventType = EventType.SOME_MESSAGES_READ;
 			else if(inbox.getUnreadItemCount() > 0 && inbox.getUnreadItemCount() > (lastUnreadCount + 1))
 				eventType = EventType.MORE_THAN_ONE_NEW_MESSAGE;
@@ -147,11 +147,14 @@ public class Boot extends Observable implements Observer
 
 			}
 			lastUnreadCount = inbox.getUnreadItemCount();
+			if(lastUnreadCount <= 0)
+				Thread.sleep(checkInboxOnIdleTime);
+			else
+				Thread.sleep(checkInboxOnNewMessagesTime);
+			
 			System.gc();
 			Runtime runtime = Runtime.getRuntime();
-
 			NumberFormat format = NumberFormat.getInstance();
-
 			long maxMemory = runtime.maxMemory();
 			long allocatedMemory = runtime.totalMemory();
 			long freeMemory = runtime.freeMemory();
