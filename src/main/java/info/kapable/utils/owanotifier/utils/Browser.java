@@ -21,8 +21,8 @@ public class Browser
 	 * 
 	 * @param url
 	 *            the page web to follow
-	 * @throws URISyntaxException 
-	 * @throws IOException 
+	 * @throws URISyntaxException
+	 * @throws IOException
 	 */
 	public static void browse(String url) throws IOException, URISyntaxException
 	{

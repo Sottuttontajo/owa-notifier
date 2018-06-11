@@ -6,7 +6,7 @@ public class ApplicationStateChangeEvent implements Event
 	{
 		STARTED
 	};
-	
+
 	private StateChange stateChange;
 
 	public StateChange getStateChange()

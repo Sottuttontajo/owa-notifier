@@ -23,7 +23,7 @@ public class LoginHandler
 	{
 		this.observer = observer;
 	}
-	
+
 	public void login()
 	{
 		// Generate UUID for login

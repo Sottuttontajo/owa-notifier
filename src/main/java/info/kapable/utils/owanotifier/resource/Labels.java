@@ -5,7 +5,7 @@ import java.io.IOException;
 public class Labels extends ResourceBundleProperties
 {
 	private static Labels instance = new Labels();
-	
+
 	public static Labels getInstance()
 	{
 		return instance;

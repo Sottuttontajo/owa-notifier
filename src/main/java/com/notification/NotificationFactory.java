@@ -124,7 +124,7 @@ public final class NotificationFactory
 	 * @param notificationClass
 	 *            the Class of the Notification to build
 	 * @return the built Notification
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public <T extends Notification> T build(Class<T> notificationClass)
 	{

@@ -250,7 +250,7 @@ public class SystemEventDispatcher extends DesktopEventDispatcher
 		if(event instanceof ApplicationStateChangeEvent)
 			processApplicationStateChangeEvent((ApplicationStateChangeEvent) event);
 	}
-	
+
 	protected void processInboxChangeEvent(InboxChangeEvent event) throws IOException
 	{
 		if(SystemTray.isSupported())
@@ -282,21 +282,22 @@ public class SystemEventDispatcher extends DesktopEventDispatcher
 			this.setToolTip(Labels.getLabel("mail.notification.all_read"));
 		}
 	}
-	
+
 	private void processApplicationStateChangeEvent(ApplicationStateChangeEvent event) throws IOException
 	{
-		switch(event.getStateChange())
+		switch (event.getStateChange())
 		{
-			case STARTED:
-				String title = Labels.getLabel("application.started.title");
-				String text = Labels.getLabel("application.started.text");
-				int checkInboxOnIdleTime = Integer.parseInt(AuthProperties.getProperty("checkInboxOnIdleTime")) / 1000;
-				text = MessageFormat.format(text, checkInboxOnIdleTime);
-				trayIcon.displayMessage(title, text, MessageType.INFO);
+		case STARTED:
+			String title = Labels.getLabel("application.started.title");
+			String text = Labels.getLabel("application.started.text");
+			int checkInboxOnIdleTime = Integer.parseInt(AuthProperties.getProperty("checkInboxOnIdleTime")) / 1000;
+			text = MessageFormat.format(text, checkInboxOnIdleTime);
+			trayIcon.displayMessage(title, text, MessageType.INFO);
 		}
 	}
 
 	@Override
 	protected void processConnectionEvent(ConnectionEvent event)
-	{}
+	{
+	}
 }

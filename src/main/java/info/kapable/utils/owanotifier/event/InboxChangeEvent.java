@@ -35,11 +35,9 @@ public class InboxChangeEvent implements Event
 {
 	public enum EventType
 	{
-		ONE_NEW_MESSAGE,
-		MORE_THAN_ONE_NEW_MESSAGE,
-		SOME_MESSAGES_READ
+		ONE_NEW_MESSAGE, MORE_THAN_ONE_NEW_MESSAGE, SOME_MESSAGES_READ
 	}
-	
+
 	// The folder
 	private Folder inbox;
 	// The type of event
@@ -145,7 +143,7 @@ public class InboxChangeEvent implements Event
 
 		if(this.eventType == EventType.ONE_NEW_MESSAGE)
 			return this.message.getBodyPreview();
-		
+
 		if(this.eventType == EventType.SOME_MESSAGES_READ)
 		{
 			if(inbox.getUnreadItemCount() > 0)

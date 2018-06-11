@@ -59,7 +59,7 @@ public class SwingEventDispatcher extends DesktopEventDispatcher
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void processInboxChangeEvent(InboxChangeEvent event) throws IOException
 	{
 		// If mute don't display notification
@@ -114,12 +114,12 @@ public class SwingEventDispatcher extends DesktopEventDispatcher
 
 		try
 		{
-			Time time = event.isConnected()? Time.seconds(Integer.parseInt(AuthProperties.getProperty("notification.fade_time"))) : Time.infinite();
+			Time time = event.isConnected() ? Time.seconds(Integer.parseInt(AuthProperties.getProperty("notification.fade_time"))) : Time.infinite();
 			SimpleManager fade = new SimpleManager(Location.SOUTHEAST);
 			fade.addNotification(connectionNotification, time);
 			if(oldNotification != null)
 				oldNotification.removeFromManager();
-			
+
 		}
 		catch (NumberFormatException e)
 		{

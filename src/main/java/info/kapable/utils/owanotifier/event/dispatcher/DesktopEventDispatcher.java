@@ -18,5 +18,6 @@ public abstract class DesktopEventDispatcher extends EventDispatcher
 	}
 
 	protected abstract void processConnectionEvent(ConnectionEvent event);
+
 	protected abstract void processInboxChangeEvent(InboxChangeEvent event) throws IOException;
 }

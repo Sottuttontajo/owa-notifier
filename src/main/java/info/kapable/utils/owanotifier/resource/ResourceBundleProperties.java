@@ -13,5 +13,6 @@ public abstract class ResourceBundleProperties extends ResourceConfiguration<Res
 
 	@Override
 	protected void setOrRemoveProperty(String key, String value) throws IOException
-	{}
+	{
+	}
 }

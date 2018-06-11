@@ -22,7 +22,7 @@ public abstract class ResourceProperties extends ResourceConfiguration<Propertie
 			throw new FileNotFoundException("Property file '" + getResourcePath() + "' not found in the classpath.");
 		}
 	}
-	
+
 	protected void setOrRemoveProperty(String key, String value) throws IOException
 	{
 		if(value != null)

@@ -5,12 +5,12 @@ import java.io.IOException;
 public class AuthProperties extends ResourceProperties
 {
 	private static AuthProperties instance = new AuthProperties();
-	
+
 	public static AuthProperties getInstance()
 	{
 		return instance;
 	}
-		
+
 	public static void setProperty(String key, String value) throws IOException
 	{
 		getInstance().setOrRemoveProperty(key, value);

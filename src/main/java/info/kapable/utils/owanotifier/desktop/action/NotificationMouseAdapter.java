@@ -60,7 +60,7 @@ public class NotificationMouseAdapter extends MouseAdapter
 		{
 			Browser.browse("https://outlook.office.com/owa/");
 		}
-		catch(Throwable t)
+		catch (Throwable t)
 		{
 			OwaNotifier.handleError("browse.io_error", t);
 		}
