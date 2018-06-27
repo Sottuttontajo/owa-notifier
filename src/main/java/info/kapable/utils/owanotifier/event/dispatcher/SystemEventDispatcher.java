@@ -96,10 +96,9 @@ public class SystemEventDispatcher extends DesktopEventDispatcher
 					if(e.getClickCount() == 2)
 					{
 						Desktop dt = Desktop.getDesktop();
-						URL f;
 						try
 						{
-							f = new URL(AuthProperties.getProperty("owaUrl"));
+							URL f = new URL(AuthProperties.getProperty("owaUrl"));
 							dt.browse(f.toURI());
 						}
 						catch (IOException e1)
