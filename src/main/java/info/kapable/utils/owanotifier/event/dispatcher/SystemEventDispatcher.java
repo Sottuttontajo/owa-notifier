@@ -41,7 +41,10 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
@@ -278,7 +281,11 @@ public class SystemEventDispatcher extends DesktopEventDispatcher
 		}
 		else
 		{
-			this.setToolTip(Labels.getLabel("mail.notification.all_read"));
+			String allReadLabel = Labels.getLabel("mail.notification.all_read");
+			String lastInboxCheckTimeLabel = Labels.getLabel("mail.notification.last_inbox_check_time");
+			DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+			String lastInboxCheckTimeFormattedLabel = MessageFormat.format(lastInboxCheckTimeLabel, dateFormat.format(new Date()));
+			this.setToolTip(allReadLabel + ". " + lastInboxCheckTimeFormattedLabel);
 		}
 	}
 
