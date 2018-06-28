@@ -17,14 +17,8 @@ import info.kapable.utils.owanotifier.webserver.InternalWebServer;
 public class LoginHandler
 {
 	private static Logger logger = LoggerFactory.getLogger(LoginHandler.class);
-	private Observer observer;
 
-	public LoginHandler(Observer observer)
-	{
-		this.observer = observer;
-	}
-
-	public void login()
+	public void login(Observer observer)
 	{
 		// Generate UUID for login
 		UUID state = UUID.randomUUID();

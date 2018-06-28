@@ -55,6 +55,7 @@ import org.slf4j.LoggerFactory;
 import info.kapable.utils.owanotifier.OwaNotifier;
 import info.kapable.utils.owanotifier.desktop.LogWindowPanel;
 import info.kapable.utils.owanotifier.event.ApplicationStateChangeEvent;
+import info.kapable.utils.owanotifier.event.ConnectingEvent;
 import info.kapable.utils.owanotifier.event.ConnectionEvent;
 import info.kapable.utils.owanotifier.event.Event;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
@@ -281,11 +282,7 @@ public class SystemEventDispatcher extends DesktopEventDispatcher
 		}
 		else
 		{
-			String allReadLabel = Labels.getLabel("mail.notification.all_read");
-			String lastInboxCheckTimeLabel = Labels.getLabel("mail.notification.last_inbox_check_time");
-			DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-			String lastInboxCheckTimeFormattedLabel = MessageFormat.format(lastInboxCheckTimeLabel, dateFormat.format(new Date()));
-			this.setToolTip(allReadLabel + ". " + lastInboxCheckTimeFormattedLabel);
+			this.setToolTip(Labels.getLabel("mail.notification.all_read"));
 		}
 	}
 
@@ -293,17 +290,12 @@ public class SystemEventDispatcher extends DesktopEventDispatcher
 	{
 		switch (event.getStateChange())
 		{
-		case STARTED:
-			String title = Labels.getLabel("application.started.title");
-			String text = Labels.getLabel("application.started.text");
-			int checkInboxOnIdleTime = Integer.parseInt(AuthProperties.getProperty("checkInboxOnIdleTime")) / 1000;
-			text = MessageFormat.format(text, checkInboxOnIdleTime);
-			trayIcon.displayMessage(title, text, MessageType.INFO);
+			case STARTED:
+				String title = Labels.getLabel("application.started.title");
+				String text = Labels.getLabel("application.started.text");
+				int checkInboxOnIdleTime = Integer.parseInt(AuthProperties.getProperty("checkInboxOnIdleTime")) / 1000;
+				text = MessageFormat.format(text, checkInboxOnIdleTime);
+				trayIcon.displayMessage(title, text, MessageType.INFO);
 		}
-	}
-
-	@Override
-	protected void processConnectionEvent(ConnectionEvent event)
-	{
 	}
 }

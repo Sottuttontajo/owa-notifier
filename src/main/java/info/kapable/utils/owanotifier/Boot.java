@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import info.kapable.utils.owanotifier.event.ApplicationStateChangeEvent;
 import info.kapable.utils.owanotifier.event.ApplicationStateChangeEvent.StateChange;
+import info.kapable.utils.owanotifier.event.ConnectingEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
 import info.kapable.utils.owanotifier.event.dispatcher.SwingEventDispatcher;
@@ -48,8 +49,17 @@ public class Boot extends Observable implements Observer
 			// Load token from oauth2 process
 			// Display login page
 			if(loginHandler == null)
-				loginHandler = new LoginHandler(this);
-			loginHandler.login();
+				loginHandler = new LoginHandler();
+			
+			ConnectingEvent connectingEvent = (ConnectingEvent) new ConnectingEvent();
+			connectingEvent.setConnected(false);
+			String title = Labels.getLabel("notification.connecting.title");
+			String text = Labels.getLabel("notification.connecting.text");
+			connectingEvent.setTitle(title);
+			connectingEvent.setText(text);
+			setChanged();
+			notifyObservers(connectingEvent);
+			loginHandler.login(this);
 		}
 		catch (Throwable t)
 		{
@@ -154,6 +164,15 @@ public class Boot extends Observable implements Observer
 		{
 			inboxManager.getTokenResponseValidator().setTokenResponse(authListner.tokenResponse);
 			inboxManager.getTokenResponseValidator().setIdToken(authListner.idTokenObj);
+			
+			ConnectingEvent connectingEvent = (ConnectingEvent) new ConnectingEvent();
+			connectingEvent.setConnected(true);
+			String title = Labels.getLabel("notification.connected.title");
+			String text = Labels.getLabel("notification.connected.text");
+			connectingEvent.setTitle(title);
+			connectingEvent.setText(text);
+			setChanged();
+			notifyObservers(connectingEvent);
 		}
 		try
 		{

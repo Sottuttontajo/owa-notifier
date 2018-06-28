@@ -35,6 +35,7 @@ import com.notification.types.IconNotification;
 
 import info.kapable.utils.owanotifier.OwaNotifier;
 import info.kapable.utils.owanotifier.event.ConnectionEvent;
+import info.kapable.utils.owanotifier.event.Event;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent;
 import info.kapable.utils.owanotifier.event.InboxChangeEvent.EventType;
 import info.kapable.utils.owanotifier.notification.manager.SimpleManager;
@@ -58,6 +59,15 @@ public class SwingEventDispatcher extends DesktopEventDispatcher
 		{
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	protected void processEvent(Event event) throws IOException
+	{
+		if(event instanceof InboxChangeEvent)
+			processInboxChangeEvent((InboxChangeEvent) event);
+		if(event instanceof ConnectionEvent)
+			processConnectionEvent((ConnectionEvent) event);
 	}
 
 	protected void processInboxChangeEvent(InboxChangeEvent event) throws IOException

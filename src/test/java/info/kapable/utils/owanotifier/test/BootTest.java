@@ -3,6 +3,7 @@ package info.kapable.utils.owanotifier.test;
 import java.io.File;
 import java.io.IOException;
 import java.util.Observable;
+import java.util.Observer;
 
 import org.junit.Test;
 
@@ -41,10 +42,10 @@ public class BootTest extends TestCase
 	{
 		Boot boot = new Boot();
 
-		LoginHandler loginHandler = new LoginHandler(null)
+		LoginHandler loginHandler = new LoginHandler()
 		{
 			@Override
-			public void login()
+			public void login(Observer observer)
 			{
 				throw new RuntimeException("Test error");
 			}
