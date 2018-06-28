@@ -282,7 +282,11 @@ public class SystemEventDispatcher extends DesktopEventDispatcher
 		}
 		else
 		{
-			this.setToolTip(Labels.getLabel("mail.notification.all_read"));
+			String allReadLabel = Labels.getLabel("mail.notification.all_read");
+			String lastInboxCheckTimeLabel = Labels.getLabel("mail.notification.last_inbox_check_time");
+			DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+			String lastInboxCheckTimeFormattedLabel = MessageFormat.format(lastInboxCheckTimeLabel, dateFormat.format(new Date()));
+			this.setToolTip(allReadLabel + ". " + lastInboxCheckTimeFormattedLabel);
 		}
 	}
 
